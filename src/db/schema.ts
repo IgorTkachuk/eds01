@@ -27,5 +27,14 @@ export const rqCharacter = mySchema.table("rqcharacter", {
   name: varchar({ length: 255 }).notNull(),
 });
 
+export const request = mySchema.table("request", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  streetId: integer(),
+  settlementId: integer(),
+  rqCharacterId: integer(),
+  rqFactId: integer()
+})
+
 export type Street = typeof street.$inferSelect;
 export type Character = typeof rqCharacter.$inferSelect;
+export type Fact = typeof rqFact.$inferSelect;

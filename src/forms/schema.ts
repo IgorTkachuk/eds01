@@ -10,6 +10,9 @@ export const formSchema = z.object({
   rqCharacterId: z.number({
     message: "Оберіть характер заявки!",
   }),
+  rqFactId: z.number({
+    message: "Оберіть фактичну причину заявки!",
+  }),
 });
 
 export type FormValues = z.infer<typeof formSchema>;
