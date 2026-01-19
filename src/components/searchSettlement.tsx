@@ -22,24 +22,24 @@ import { Button } from "@/components/ui/button";
 import { FormItem, FormLabel, FormControl } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 
-import { searchStreet, StreetDTO } from "@/app/actions/search-street";
+import { SettlementDTO } from "@/app/actions/search-settlement";
 import { FormValues } from "@/forms/schema";
 import { useRef, useState } from "react";
 
 interface Props {
   control: Control<FormValues>;
-  search: (term: string) => Promise<StreetDTO[]>;
+  search: (term: string) => Promise<SettlementDTO[]>;
 }
 
-export function StreetSelect({ control, search }: Props) {
+export function SettlementSelect({ control, search }: Props) {
   const { field, fieldState } = useController({
-    name: "streetId",
+    name: "settlementId",
     control,
   });
 
   const [open, setOpen] = useState(false);
-  const [items, setItems] = useState<StreetDTO[]>([]);
-  const [selected, setSelected] = useState<StreetDTO | null>(null);
+  const [items, setItems] = useState<SettlementDTO[]>([]);
+  const [selected, setSelected] = useState<SettlementDTO | null>(null);
   const [loading, setLoading] = useState(false);
 
   const requestId = useRef(0);
@@ -64,7 +64,7 @@ export function StreetSelect({ control, search }: Props) {
 
   return (
     <FormItem>
-      <FormLabel>Вулиця</FormLabel>
+      <FormLabel>Населенний пункт</FormLabel>
       <Popover
         open={open}
         onOpenChange={(v) => {
@@ -86,7 +86,7 @@ export function StreetSelect({ control, search }: Props) {
                 fieldState.error && "border-destructive",
               )}
             >
-              {selected?.name ?? "Оберіть вулицю"}
+              {selected?.name ?? "Оберіть населений пункт"}
               <ChevronsUpDown className='ml-2 h-4 w-4 opacity-50' />
             </Button>
           </FormControl>
@@ -104,24 +104,25 @@ export function StreetSelect({ control, search }: Props) {
                 {loading ? "Завантаження" : "Нічого не знайдено"}
               </CommandEmpty>
               <CommandGroup>
-                {items.map((street) => (
+                {items.map((settlement) => (
                   <CommandItem
-                    key={street.id}
-                    // value={street.name}
-                    value={street.id.toString()}
+                    key={settlement.id}
+                    value={settlement.id.toString()}
                     onSelect={() => {
-                      setSelected(street);
-                      field.onChange(street.id);
+                      setSelected(settlement);
+                      field.onChange(settlement.id);
                       setOpen(false);
                     }}
                   >
                     <Check
                       className={cn(
                         "mr-2 h-4 w-4",
-                        street.id === field.value ? "opacity-100" : "opacity-0",
+                        settlement.id === field.value
+                          ? "opacity-100"
+                          : "opacity-0",
                       )}
                     />
-                    {street.name}
+                    {settlement.name}
                   </CommandItem>
                 ))}
               </CommandGroup>
