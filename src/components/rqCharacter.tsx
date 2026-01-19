@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { getRqCharacter } from "@/app/actions/rq-character";
 import { Character } from "@/db/schema";
@@ -41,7 +42,13 @@ export function RqCharacter({ control }: Props) {
           field.onChange(Number(rqCharacter));
         }}
       >
-        <SelectTrigger className='w-75' id='rqCharacter'>
+        <SelectTrigger
+          className={cn(
+            "w-75 justify-between",
+            fieldState.error && "border-destructive",
+          )}
+          id='rqCharacter'
+        >
           <SelectValue placeholder='Оберіть характер заявки' />
         </SelectTrigger>
         <SelectContent>
