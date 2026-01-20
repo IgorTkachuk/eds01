@@ -45,6 +45,11 @@ export const request = mySchema.table("request", {
   materialId: integer(),
   pipeLayingTypeId: integer(),
   pressureId: integer(),
+  buildingNumber: varchar("building_number", {length: 10}),
+  customerFullName: varchar("customer_full_name", {length: 255}),
+  customerPhoneNumber: varchar("customer_phone_number", {length: 13}),
+  completedWork: varchar("completed_work", {length: 300}),
+  notes: varchar({length: 300}),
 });
 
 export const pressure = mySchema.table("pressure", {
@@ -66,6 +71,7 @@ export const pipeLayingType = mySchema.table("pipe_laying_type", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   name: varchar({ length: 255 }),
 });
+
 
 export type Street = typeof street.$inferSelect;
 export type Character = typeof rqCharacter.$inferSelect;

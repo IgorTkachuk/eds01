@@ -23,6 +23,7 @@ import { getDiameter } from "../actions/search-diameter";
 import { getMaterial } from "../actions/search-material";
 import { getPressure } from "../actions/search-pressure";
 import { getPipeLayingType } from "../actions/search-pipe-laying";
+import { RqInput } from "@/components/rqInput";
 
 export default function StreetForm() {
   const form = useForm<FormValues>({
@@ -34,6 +35,10 @@ export default function StreetForm() {
       rqFactId: undefined,
       inputDT: undefined,
       finishDT: undefined,
+      buildingNumber: undefined,
+      // customerFullName: undefined,
+      // complitedWork: undefined,
+      // notes: undefined
     },
   });
 
@@ -50,8 +55,11 @@ export default function StreetForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4 p-4'>
-        <StreetSelect control={form.control} search={searchStreet} />
         <SettlementSelect control={form.control} search={searchSettlement} />
+        <StreetSelect control={form.control} search={searchStreet} />
+        <RqInput fieldName="buildingNumber" label="Номер будинку" placeholder=" № будинку" control={
+          form.control
+        } />
         <RqSelect
           fieldName='rqCharacterId'
           control={form.control}

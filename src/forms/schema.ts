@@ -31,6 +31,19 @@ export const formSchema = z.object({
   pressureId: z.number({
     message: "Вкажіть тиск",
   }),
+  buildingNumber: z.string({
+    message: "Вкажіть номер будівлі"
+  }),
+  // customerFullName: z.string({
+  //   message: "Вкажіть ПІБ споживача"
+  // }),
+  // customerPhoneNumber: z.string({
+  //   message: "Вкажіть номер телефону споживача"
+  // }),
+  // complitedWork: z.string({
+  //   message: "Вкажіть виконані роботи"
+  // }),
+  // notes: z.string()
 });
 
 export type FormValues = z.infer<typeof formSchema>;
