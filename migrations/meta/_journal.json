@@ -36,6 +36,48 @@
       "when": 1768852046416,
       "tag": "0004_icy_frank_castle",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1768910530233,
+      "tag": "0005_harsh_stranger",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1768910648588,
+      "tag": "0006_fantastic_daredevil",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1768911459342,
+      "tag": "0007_dusty_purple_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1768915062256,
+      "tag": "0008_crazy_thena",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1768919869188,
+      "tag": "0009_chilly_tyrannus",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1768920588552,
+      "tag": "0010_wealthy_clea",
+      "breakpoints": true
     }
   ]
 }

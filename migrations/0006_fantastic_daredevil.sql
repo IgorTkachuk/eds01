@@ -1,0 +1,1 @@
+ALTER TABLE "postgres"."request" ALTER COLUMN "inputdate" SET DATA TYPE timestamp;

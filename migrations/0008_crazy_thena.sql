@@ -1,0 +1,1 @@
+ALTER TABLE "postgres"."request" ADD COLUMN "finishdate" timestamp with time zone;

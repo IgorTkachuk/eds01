@@ -9,6 +9,10 @@ import settlement from "./data/settlement";
 import street from "./data/street";
 import fact from "./data/rqfact";
 import character from "./data/rqharacter";
+import diameter from "./data/diameter";
+import material from "./data/material";
+import pipeLayingType from "./data/pipe_laying_type";
+import pressure from "./data/pressure";
 
 async function seeding() {
   await reset(db, schema);
@@ -22,6 +26,14 @@ async function seeding() {
   await db.execute(sql.raw(fact));
 
   await db.execute(sql.raw(character));
+
+  await db.execute(sql.raw(diameter));
+
+  await db.execute(sql.raw(material));
+
+  await db.execute(sql.raw(pipeLayingType));
+
+  await db.execute(sql.raw(pressure));
 }
 
 seeding();

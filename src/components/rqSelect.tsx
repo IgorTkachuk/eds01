@@ -2,8 +2,6 @@
 
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
-import { getRqCharacter } from "@/app/actions/rq-character";
-import { Character } from "@/db/schema";
 
 import {
   Select,
@@ -18,25 +16,40 @@ import { Label } from "./ui/label";
 import { Control, useController } from "react-hook-form";
 import { FormValues } from "@/forms/schema";
 
-interface Props {
-  control: Control<FormValues>;
+interface Item {
+  id: number;
+  name: string | null;
 }
 
-export function RqCharacter({ control }: Props) {
+interface Props {
+  control: Control<FormValues>;
+  fieldName: keyof FormValues;
+  caption: string;
+  placeholder: string;
+  action: () => Promise<Item[]>;
+}
+
+export function RqSelect({
+  control,
+  fieldName,
+  caption,
+  placeholder,
+  action,
+}: Props) {
   // const characters = use(getRqCharacter());
   const { field, fieldState } = useController({
-    name: "rqCharacterId",
+    name: fieldName,
     control,
   });
-  const [characters, setCharacters] = useState<Character[]>([]);
+  const [items, setItems] = useState<Item[]>([]);
 
   useEffect(() => {
-    getRqCharacter().then(setCharacters);
+    action().then(setItems);
   }, []);
 
   return (
     <>
-      <Label htmlFor='rqCharacter'>Характер заявки</Label>
+      <Label htmlFor='rqCharacter'>{caption}</Label>
       <Select
         onValueChange={(rqCharacter) => {
           field.onChange(Number(rqCharacter));
@@ -49,14 +62,14 @@ export function RqCharacter({ control }: Props) {
           )}
           id='rqCharacter'
         >
-          <SelectValue placeholder='Оберіть характер заявки' />
+          <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectLabel>Характер</SelectLabel>
-            {characters.map((characer) => (
-              <SelectItem key={characer.id} value={characer.id.toString()}>
-                {characer.name}
+            <SelectLabel>{caption}</SelectLabel>
+            {items.map((item) => (
+              <SelectItem key={item.id} value={item.id.toString()}>
+                {item.name}
               </SelectItem>
             ))}
           </SelectGroup>

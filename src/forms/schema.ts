@@ -13,14 +13,24 @@ export const formSchema = z.object({
   rqFactId: z.number({
     message: "Оберіть фактичну причину заявки!",
   }),
+  inputDT: z.date({
+    message: "Вкажіть дату та час прийому заявки!",
+  }),
+  finishDT: z.date({
+    message: "Вкажіть дату та час виконання заявки!",
+  }),
+  diameterId: z.number({
+    message: "Вкажіть діаметер",
+  }),
+  materialId: z.number({
+    message: "Вкажіть матеріал",
+  }),
+  pipeLayingTypeId: z.number({
+    message: "Вкажіть розташування",
+  }),
+  pressureId: z.number({
+    message: "Вкажіть тиск",
+  }),
 });
 
 export type FormValues = z.infer<typeof formSchema>;
-
-// export const formSettlementSchema = z.object({
-//   streetId: z.number({
-//     message: "Оберіть населенний пункт!",
-//   }),
-// });
-
-// export type FormSettlementValues = z.infer<typeof formSettlementSchema>;
