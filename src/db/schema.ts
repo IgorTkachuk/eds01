@@ -1,3 +1,5 @@
+import { relations } from "drizzle-orm/relations";
+
 import {
   pgTable,
   integer,
@@ -35,7 +37,7 @@ export const rqCharacter = mySchema.table("rqcharacter", {
 
 export const request = mySchema.table("request", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  streetId: integer(),
+  streetId: integer().references(()=>street.id),
   settlementId: integer(),
   rqCharacterId: integer(),
   rqFactId: integer(),
@@ -52,6 +54,17 @@ export const request = mySchema.table("request", {
   notes: varchar({ length: 300 }),
   performer: integer(),
 });
+
+export const streetRelations = relations(street, ({many})=>({
+  request: many(request)
+}))
+
+export const requestRelations = relations(request, ({one}) => ({
+  street: one(street,{
+    fields: [request.streetId],
+    references: [street.id]
+  })
+}))
 
 export const pressure = mySchema.table("pressure", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
