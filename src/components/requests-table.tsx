@@ -16,10 +16,10 @@ export default async function RequestsTable() {
       <TableCaption>Перелік заявок</TableCaption>
       <TableHeader>
         <TableRow>
-          <TableHead className='w-25'>Performer</TableHead>
-          <TableHead>Customer Full Name</TableHead>
-          <TableHead>Customer Phone Number</TableHead>
-          <TableHead className='text-right'>Completed work</TableHead>
+          <TableHead className='w-25'>Виконавець</TableHead>
+          <TableHead>ПІБ заявника</TableHead>
+          <TableHead>Тел. номер заявника</TableHead>
+          <TableHead className='text-right'>Виконана робота</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
