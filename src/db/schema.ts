@@ -69,7 +69,7 @@ export const requestRelations = relations(request, ({one}) => ({
 export const pressure = mySchema.table("pressure", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   name: varchar({ length: 255 }),
-});
+}); 
 
 export const material = mySchema.table("material", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
