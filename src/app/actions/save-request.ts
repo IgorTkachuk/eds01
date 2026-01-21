@@ -5,8 +5,6 @@ import { db } from "@/db/drizzle";
 import { request } from "@/db/schema";
 
 export async function saveRequestAction(data: unknown) {
-  // console.log(data);
-  
   const values = formSchema.parse(data);
 
   await db.insert(request).values({
@@ -21,9 +19,11 @@ export async function saveRequestAction(data: unknown) {
     pipeLayingTypeId: values.pipeLayingTypeId,
     pressureId: values.pressureId,
     buildingNumber: values.buildingNumber,
-    // customerFullName: values.customerFullName,
-    // completedWork: values.complitedWork,
-    // notes: values.notes
+    customerFullName: values.customerFullName,
+    customerPhoneNumber: values.customerPhoneNumber,
+    completedWork: values.complitedWork,
+    notes: values.notes,
+    performer: values.performer,
   });
 
   return { success: true };

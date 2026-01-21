@@ -49,7 +49,7 @@ export function DatePicker({ control, fieldName, caption }: Props) {
   }
 
   return (
-    <div>
+    <div className='mb-4'>
       <div className='flex'>
         <div className='mr-4'>
           <Popover>

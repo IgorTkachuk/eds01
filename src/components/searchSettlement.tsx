@@ -63,7 +63,7 @@ export function SettlementSelect({ control, search }: Props) {
   }
 
   return (
-    <FormItem>
+    <FormItem className='mb-4'>
       <FormLabel>Населенний пункт</FormLabel>
       <Popover
         open={open}

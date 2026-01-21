@@ -13,6 +13,7 @@ import diameter from "./data/diameter";
 import material from "./data/material";
 import pipeLayingType from "./data/pipe_laying_type";
 import pressure from "./data/pressure";
+import performer from "./data/performer";
 
 async function seeding() {
   await reset(db, schema);
@@ -34,6 +35,8 @@ async function seeding() {
   await db.execute(sql.raw(pipeLayingType));
 
   await db.execute(sql.raw(pressure));
+
+  await db.execute(sql.raw(performer));
 }
 
 seeding();

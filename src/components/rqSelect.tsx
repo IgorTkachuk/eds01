@@ -27,6 +27,7 @@ interface Props {
   caption: string;
   placeholder: string;
   action: () => Promise<Item[]>;
+  className?: string;
 }
 
 export function RqSelect({
@@ -35,6 +36,7 @@ export function RqSelect({
   caption,
   placeholder,
   action,
+  className,
 }: Props) {
   // const characters = use(getRqCharacter());
   const { field, fieldState } = useController({
@@ -48,8 +50,10 @@ export function RqSelect({
   }, []);
 
   return (
-    <>
-      <Label htmlFor='rqCharacter'>{caption}</Label>
+    <div className='mb-4'>
+      <Label htmlFor='rqCharacter' className='mb-2'>
+        {caption}
+      </Label>
       <Select
         onValueChange={(rqCharacter) => {
           field.onChange(Number(rqCharacter));
@@ -58,6 +62,7 @@ export function RqSelect({
         <SelectTrigger
           className={cn(
             "w-75 justify-between",
+            className,
             fieldState.error && "border-destructive",
           )}
           id='rqCharacter'
@@ -80,6 +85,6 @@ export function RqSelect({
           {fieldState.error.message}
         </p>
       )}
-    </>
+    </div>
   );
 }

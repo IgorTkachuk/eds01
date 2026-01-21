@@ -63,7 +63,7 @@ export function StreetSelect({ control, search }: Props) {
   }
 
   return (
-    <FormItem>
+    <FormItem className='mb-4'>
       <FormLabel>Вулиця</FormLabel>
       <Popover
         open={open}
