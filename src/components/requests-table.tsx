@@ -26,7 +26,6 @@ export default async function RequestsTable() {
           <TableHead>Населенний п-т</TableHead>
           <TableHead>Вулиця</TableHead>
           <TableHead>Буд.</TableHead>
-          <TableHead className='text-right'>Виконана робота</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -44,7 +43,6 @@ export default async function RequestsTable() {
             <TableCell>{settlement?.name}</TableCell>
             <TableCell>{street?.name}</TableCell>
             <TableCell>{req.buildingNumber}</TableCell>
-            <TableCell className='text-right'>{req.completedWork}</TableCell>
           </TableRow>
         ))}
       </TableBody>
