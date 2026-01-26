@@ -10,6 +10,8 @@ import {
 } from "./ui/table";
 import { format } from "date-fns";
 import { uk } from "react-day-picker/locale";
+import { Button } from "./ui/button";
+import { Pencil, Trash, Trash2 } from "lucide-react";
 
 export default async function RequestsTable() {
   const requests = await getRequests();
@@ -26,6 +28,7 @@ export default async function RequestsTable() {
           <TableHead>Населенний п-т</TableHead>
           <TableHead>Вулиця</TableHead>
           <TableHead>Буд.</TableHead>
+          <TableHead className="text-right">Дії</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -43,6 +46,10 @@ export default async function RequestsTable() {
             <TableCell>{settlement?.name}</TableCell>
             <TableCell>{street?.name}</TableCell>
             <TableCell>{req.buildingNumber}</TableCell>
+            <TableCell className="text-right">
+              <Button variant="ghost"><Pencil className="size-4"/></Button>
+              <Button variant="ghost"><Trash2 className="size-4"/></Button>
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
