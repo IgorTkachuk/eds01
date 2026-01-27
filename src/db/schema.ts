@@ -94,3 +94,4 @@ export const performer = mySchema.table("performer", {
 export type Street = typeof street.$inferSelect;
 export type Character = typeof rqCharacter.$inferSelect;
 export type Fact = typeof rqFact.$inferSelect;
+export type Request = typeof request.$inferSelect;

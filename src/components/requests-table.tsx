@@ -8,11 +8,20 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { format } from "date-fns";
 import { uk } from "react-day-picker/locale";
 import { Button } from "./ui/button";
 import { Pencil } from "lucide-react";
 import { DeleteRequestButton } from "./delete-request-button";
+import RequestForm from "./forms/request-form";
 
 export default async function RequestsTable() {
   const requests = await getRequests();
@@ -21,7 +30,7 @@ export default async function RequestsTable() {
       <TableCaption>Перелік заявок</TableCaption>
       <TableHeader>
         <TableRow>
-          <TableHead className='w-25'>Виконавець</TableHead>
+          <TableHead className="w-25">Виконавець</TableHead>
           <TableHead>Надходження</TableHead>
           <TableHead>Завершено</TableHead>
           <TableHead>ПІБ заявника</TableHead>
@@ -29,7 +38,7 @@ export default async function RequestsTable() {
           <TableHead>Населенний п-т</TableHead>
           <TableHead>Вулиця</TableHead>
           <TableHead>Буд.</TableHead>
-          <TableHead className='text-right'>Дії</TableHead>
+          <TableHead className="text-right">Дії</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -47,10 +56,20 @@ export default async function RequestsTable() {
             <TableCell>{settlement?.name}</TableCell>
             <TableCell>{street?.name}</TableCell>
             <TableCell>{req.buildingNumber}</TableCell>
-            <TableCell className='text-right'>
-              <Button variant='ghost'>
-                <Pencil className='size-4' />
-              </Button>
+            <TableCell className="text-right">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="ghost">
+                    <Pencil className="size-4" />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-fit">
+                  <DialogHeader>
+                    <DialogTitle>Редагування заявки</DialogTitle>
+                    <RequestForm request={req} />
+                  </DialogHeader>
+                </DialogContent>
+              </Dialog>
               <DeleteRequestButton requestId={req.id} />
             </TableCell>
           </TableRow>

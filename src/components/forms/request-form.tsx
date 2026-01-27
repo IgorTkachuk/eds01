@@ -29,26 +29,37 @@ import { getPerformer } from "@/app/actions/search-performer";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-// import { DevTool } from "@hookform/devtools";
+import { Request } from "@/db/schema";
+import { updateRequest } from "@/app/actions/requests";
 
-export default function RequestForm() {
+import { DevTool } from "@hookform/devtools";
+
+interface RequestFormProps {
+  request?: Request
+}
+
+export default function RequestForm({request}: RequestFormProps) {
   const router = useRouter();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      streetId: undefined,
-      settlementId: undefined,
-      rqCharacterId: undefined,
-      rqFactId: undefined,
-      inputDT: undefined,
-      finishDT: undefined,
-      buildingNumber: "",
-      customerFullName: "",
-      customerPhoneNumber: "",
-      complitedWork: "",
-      notes: "",
-      performer: undefined,
+      streetId: request?.streetId || undefined,
+      settlementId: request?.settlementId || undefined,
+      rqCharacterId: request?.rqCharacterId || undefined,
+      rqFactId: request?.rqFactId || undefined,
+      inputDT: request?.inputdate || undefined,
+      finishDT: request?.finishdate || undefined,
+      buildingNumber: request?.buildingNumber || "",
+      customerFullName: request?.customerFullName || "",
+      customerPhoneNumber: request?.customerPhoneNumber || "",
+      complitedWork: request?.completedWork || "",
+      notes: request?.notes || "",
+      performer: request?.performer || undefined,
+      diameterId: request?.diameterId || undefined,
+      materialId: request?.materialId || undefined,
+      pressureId: request?.pressureId || undefined,
+      pipeLayingTypeId: request?.pipeLayingTypeId || undefined,
     },
     mode: "onChange",
   });
@@ -56,16 +67,27 @@ export default function RequestForm() {
   const [pending, startTransition] = useTransition();
 
   function onSubmit(values: FormValues) {
+    let res;
     startTransition(async () => {
-      const res = await saveRequestAction(values);
+      if(request){
+        res = await updateRequest({
+          ...values,
+          inputdate: values.inputDT,
+          finishdate: values.finishDT,
+          completedWork: values.complitedWork,
+          id: request.id
+        })
+      } else {
+        res = await saveRequestAction(values);
+      }
       console.log("Збережено", res);
 
       if (res?.success) {
-        toast.success("Заявку збережено", { position: "bottom-right" });
+        toast.success(`Заявку ${request ? "оновлено" : "збережено"}`, { position: "bottom-right" });
         form.reset();
         router.refresh();
       } else {
-        toast.error("Помилка збереження");
+        toast.error(`Помилка ${ request ? "оновлення" : "збереження"}`);
       }
     });
   }
@@ -195,6 +217,7 @@ export default function RequestForm() {
           </Button>
         </form>
       </Form>
+      <DevTool control={form.control} />
     </>
   );
 }
