@@ -39,7 +39,9 @@ export function SettlementSelect({ control, search }: Props) {
 
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState<SettlementDTO[]>([]);
-  const [selected, setSelected] = useState<SettlementDTO | null>(null);
+  // const [selected, setSelected] = useState<SettlementDTO | null>(null);
+  const selected = items.find((i) => i.id === field.value) ?? null;
+
   const [loading, setLoading] = useState(false);
 
   const requestId = useRef(0);
@@ -109,7 +111,7 @@ export function SettlementSelect({ control, search }: Props) {
                     key={settlement.id}
                     value={settlement.id.toString()}
                     onSelect={() => {
-                      setSelected(settlement);
+                      // setSelected(settlement);
                       field.onChange(settlement.id);
                       setOpen(false);
                     }}

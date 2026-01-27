@@ -45,19 +45,39 @@ export function RqSelect({
   });
   const [items, setItems] = useState<Item[]>([]);
 
+  console.log(field.name, field.value);
+
+  // const [selectKey, setSelectKey] = useState(0);
+
+  // useEffect(() => {
+  //   action().then(setItems);
+  // }, [action]);
+
+  // useEffect(() => {
+  //   if (field.value === undefined) {
+  //     setSelectKey((k) => k + 1);
+  //   }
+  // }, [field.value]);
+
   useEffect(() => {
-    action().then(setItems);
-  }, []);
+    let isMounted = true;
+    action().then((data) => {
+      if (isMounted) setItems(data);
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, [action]);
 
   return (
     <div className='mb-4'>
-      <Label htmlFor='rqCharacter' className='mb-2'>
+      <Label htmlFor={field.name} className='mb-2'>
         {caption}
       </Label>
       <Select
-        onValueChange={(rqCharacter) => {
-          field.onChange(Number(rqCharacter));
-        }}
+        // value={field.value != null ? String(field.value) : undefined}
+        value={String(field.value ?? "")}
+        onValueChange={(val) => field.onChange(Number(val))}
       >
         <SelectTrigger
           className={cn(
@@ -65,13 +85,14 @@ export function RqSelect({
             className,
             fieldState.error && "border-destructive",
           )}
-          id='rqCharacter'
+          id={field.name}
         >
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
             <SelectLabel>{caption}</SelectLabel>
+            {/* <SelectItem value=''>— Оберіть —</SelectItem> */}
             {items.map((item) => (
               <SelectItem key={item.id} value={item.id.toString()}>
                 {item.name}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+// import { useState } from "react";
 
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
@@ -32,19 +32,17 @@ export function DatePicker({ control, fieldName, caption }: Props) {
     control,
   });
 
-  const [date, setDate] = useState<Date>();
+  // const [date, setDate] = useState<Date>();
+  const date = field.value as Date | undefined;
 
   function handleTime(time: string): void {
+    if (!field.value) return;
+
     const [hours, minutes, seconds = 0] = time.split(":").map(Number);
-    const newDate = new Date(
-      date!.getFullYear(),
-      date!.getMonth(),
-      date!.getDate(),
-      hours,
-      minutes,
-      seconds,
-    );
-    setDate(newDate);
+
+    const newDate = new Date(field.value);
+    newDate.setHours(hours, minutes, seconds);
+
     field.onChange(newDate);
   }
 
@@ -79,7 +77,7 @@ export function DatePicker({ control, fieldName, caption }: Props) {
                 mode='single'
                 selected={date}
                 onSelect={(date) => {
-                  setDate(date);
+                  // setDate(date);
                   field.onChange(date);
                 }}
                 locale={uk}
@@ -95,7 +93,8 @@ export function DatePicker({ control, fieldName, caption }: Props) {
             type='time'
             id='time-picker'
             step='1'
-            defaultValue='10:30:00'
+            // defaultValue='10:30:00'
+            value={date ? format(date, "HH:mm:ss") : ""}
             className='w-30 bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none'
             onChange={(e) => handleTime(e.target.value)}
           />

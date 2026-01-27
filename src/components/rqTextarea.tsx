@@ -23,13 +23,17 @@ export function RqTextarea({
     name: fieldName,
     control,
   });
+
+  console.log(field.name, field.value);
+
   return (
     <div className={cn("mb-2", { className })}>
       <Field>
-        <FieldLabel htmlFor='input-field'>{label}</FieldLabel>
+        <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
         <Textarea
-          id='input-field'
+          id={field.name}
           placeholder={placeholder}
+          value={String(field.value ?? "")}
           onChange={({ target: { value } }) => {
             field.onChange(value);
           }}

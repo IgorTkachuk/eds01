@@ -31,6 +31,7 @@ export function RqInput({
           id='input-field'
           type='text'
           placeholder={placeholder}
+          value={typeof field.value === "string" ? field.value : ""}
           onChange={({ target: { value } }) => {
             field.onChange(value);
           }}

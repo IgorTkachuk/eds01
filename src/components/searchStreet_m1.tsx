@@ -22,7 +22,7 @@ import { Button } from "@/components/ui/button";
 import { FormItem, FormLabel, FormControl } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 
-import { searchStreet, StreetDTO } from "@/app/actions/search-street";
+import { StreetDTO } from "@/app/actions/search-street";
 import { FormValues } from "@/forms/schema";
 import { useRef, useState } from "react";
 
@@ -39,7 +39,8 @@ export function StreetSelect({ control, search }: Props) {
 
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState<StreetDTO[]>([]);
-  const [selected, setSelected] = useState<StreetDTO | null>(null);
+  // const [selected, setSelected] = useState<StreetDTO | null>(null);
+  const selected = items.find((i) => i.id === field.value) ?? null;
   const [loading, setLoading] = useState(false);
 
   const requestId = useRef(0);
@@ -108,9 +109,9 @@ export function StreetSelect({ control, search }: Props) {
                   <CommandItem
                     key={street.id}
                     // value={street.name}
-                    value={street.id.toString()}
+                    value={String(street.id)}
                     onSelect={() => {
-                      setSelected(street);
+                      // setSelected(street);
                       field.onChange(street.id);
                       setOpen(false);
                     }}
