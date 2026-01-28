@@ -32,13 +32,14 @@ import { toast } from "sonner";
 import { Request } from "@/db/schema";
 import { updateRequest } from "@/app/actions/requests";
 
-import { DevTool } from "@hookform/devtools";
+// import { DevTool } from "@hookform/devtools";
+import { Loader2 } from "lucide-react";
 
 interface RequestFormProps {
-  request?: Request
+  request?: Request;
 }
 
-export default function RequestForm({request}: RequestFormProps) {
+export default function RequestForm({ request }: RequestFormProps) {
   const router = useRouter();
 
   const form = useForm<FormValues>({
@@ -69,25 +70,31 @@ export default function RequestForm({request}: RequestFormProps) {
   function onSubmit(values: FormValues) {
     let res;
     startTransition(async () => {
-      if(request){
+      if (request) {
         res = await updateRequest({
           ...values,
           inputdate: values.inputDT,
           finishdate: values.finishDT,
           completedWork: values.complitedWork,
-          id: request.id
-        })
+          id: request.id,
+        });
       } else {
         res = await saveRequestAction(values);
       }
       console.log("Збережено", res);
 
       if (res?.success) {
-        toast.success(`Заявку ${request ? "оновлено" : "збережено"}`, { position: "bottom-right" });
-        form.reset();
+        toast.success(`Заявку ${request ? "оновлено" : "збережено"}`, {
+          position: "bottom-right",
+        });
+        form.reset({
+          ...values,
+          inputDT: values.inputDT,
+          finishDT: values.finishDT,
+        });
         router.refresh();
       } else {
-        toast.error(`Помилка ${ request ? "оновлення" : "збереження"}`);
+        toast.error(`Помилка ${request ? "оновлення" : "збереження"}`);
       }
     });
   }
@@ -212,12 +219,19 @@ export default function RequestForm({request}: RequestFormProps) {
               />
             </div>
           </div>
-          <Button type='submit' disabled={pending}>
-            {pending ? "Збереження..." : "Зберегти"}
+          <Button type='submit' disabled={pending} className='w-50'>
+            {pending ? (
+              <>
+                <Loader2 className='size-4 animate-spin' />
+                Збереження...
+              </>
+            ) : (
+              `${request ? "Оновити" : "Додати"} заявку`
+            )}
           </Button>
         </form>
       </Form>
-      <DevTool control={form.control} />
+      {/* <DevTool control={form.control} /> */}
     </>
   );
 }

@@ -22,9 +22,9 @@ import { Button } from "@/components/ui/button";
 import { FormItem, FormLabel, FormControl } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 
-import { StreetDTO } from "@/app/actions/search-street";
+import { getStreetById, StreetDTO } from "@/app/actions/search-street";
 import { FormValues } from "@/forms/schema";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface Props {
   control: Control<FormValues>;
@@ -40,6 +40,23 @@ export function StreetSelect({ control, search }: Props) {
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState<StreetDTO[]>([]);
   // const [selected, setSelected] = useState<StreetDTO | null>(null);
+
+  useEffect(() => {
+    async function loadSelected() {
+      if (!field.value) return;
+
+      const street = await getStreetById(field.value);
+      if (!street) return;
+
+      setItems((prev) => {
+        if (prev.some((i) => i.id === street.id)) return prev;
+        return [street, ...prev];
+      });
+    }
+
+    loadSelected();
+  }, [field.value]);
+
   const selected = items.find((i) => i.id === field.value) ?? null;
   const [loading, setLoading] = useState(false);
 
@@ -83,7 +100,7 @@ export function StreetSelect({ control, search }: Props) {
               variant='outline'
               role='combobox'
               className={cn(
-                "w-75 justify-between",
+                "w-75 justify-between font-normal",
                 fieldState.error && "border-destructive",
               )}
             >

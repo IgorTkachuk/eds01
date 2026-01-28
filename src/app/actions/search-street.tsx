@@ -2,7 +2,7 @@
 
 import { db } from "@/db/drizzle";
 import { street } from "@/db/schema";
-import { ilike } from "drizzle-orm";
+import { ilike, eq } from "drizzle-orm";
 import { cache } from "react";
 
 export type StreetDTO = {
@@ -24,5 +24,19 @@ export const searchStreet = cache(
       .limit(20);
 
     return strs;
-  }
+  },
+);
+
+export const getStreetById = cache(
+  async (id: number): Promise<StreetDTO | undefined> => {
+    try {
+      const str = await db.query.street.findFirst({
+        where: eq(street.id, id),
+      });
+
+      return str;
+    } catch (error) {
+      console.error(error);
+    }
+  },
 );
