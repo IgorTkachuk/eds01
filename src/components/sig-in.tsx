@@ -17,6 +17,8 @@ import { Loader2, Key } from "lucide-react";
 import { signIn } from "@/lib/auth-client";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { singUp } from "@/server/user";
+import { user } from "../../auth-schema";
 
 export default function SignIn() {
   const [username, setUsername] = useState("");
@@ -75,11 +77,12 @@ export default function SignIn() {
           </div>
           <Button
             type='submit'
+            // type="button"
             className='w-full'
             disabled={loading}
             onClick={async () => {
-              await signIn.username({
-                username,
+              await signIn.email({
+                email: username,
                 password,
                 rememberMe,
                 fetchOptions: {
@@ -93,6 +96,7 @@ export default function SignIn() {
                 callbackURL: "/request",
               });
             }}
+            // onClick={singUp}
           >
             {loading ? (
               <Loader2 size={16} className='animate-spin' />
