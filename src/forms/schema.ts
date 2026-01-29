@@ -45,9 +45,8 @@ export const formSchema = z
       message: "Вкажіть виконані роботи",
     }),
     notes: z.string(),
-    performer: z.number({
-      message: "Вкажіть ПІБ викоавця робіт",
-    }),
+    performer: z.number(),
+    userId: z.string(),
   })
   // .refine((data) => data.finishDT > data.inputDT, {
   //   message: "Дата виконання заявки повинна бути пізніше за дату прийняття",

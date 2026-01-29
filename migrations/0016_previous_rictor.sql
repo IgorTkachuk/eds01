@@ -1,0 +1,1 @@
+ALTER TABLE "postgres"."request" ADD COLUMN "userId" varchar(255);

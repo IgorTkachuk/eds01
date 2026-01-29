@@ -56,6 +56,7 @@ export const request = mySchema.table("request", {
   completedWork: varchar("completed_work", { length: 300 }),
   notes: varchar({ length: 300 }),
   performer: integer(),
+  userId: varchar({length: 255})
 });
 
 export const streetRelations = relations(street, ({ many }) => ({

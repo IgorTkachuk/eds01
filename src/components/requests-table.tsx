@@ -23,8 +23,12 @@ import { Pencil } from "lucide-react";
 import { DeleteRequestButton } from "./delete-request-button";
 import RequestForm from "./forms/request-form";
 
-export default async function RequestsTable() {
-  const requests = await getRequests();
+interface RequestTableProp {
+  userId: string
+}
+
+export default async function RequestsTable({userId}: RequestTableProp) {
+  const requests = await getRequests(userId);
   return (
     <Table>
       <TableCaption>Перелік заявок</TableCaption>

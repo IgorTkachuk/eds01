@@ -18,7 +18,6 @@ import { signIn } from "@/lib/auth-client";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { singUp } from "@/server/user";
-import { user } from "../../auth-schema";
 
 export default function SignIn() {
   const [username, setUsername] = useState("");

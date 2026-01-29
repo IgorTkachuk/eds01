@@ -24,6 +24,7 @@ export async function saveRequestAction(data: unknown) {
     completedWork: values.complitedWork,
     notes: values.notes,
     performer: values.performer,
+    userId: values.userId
   });
 
   return { success: true };

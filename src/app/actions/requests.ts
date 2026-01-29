@@ -5,14 +5,15 @@ import { performer, Request, request, settlement, street } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { success } from "zod";
 
-export async function getRequests() {
+export async function getRequests(userId: string) {
   try {
     const allRequests = await db
       .select()
       .from(request)
       .leftJoin(street, eq(street.id, request.streetId))
       .leftJoin(settlement, eq(settlement.id, request.settlementId))
-      .leftJoin(performer, eq(performer.id, request.performer));
+      .leftJoin(performer, eq(performer.id, request.performer))
+      .where(eq(request.userId, userId));
     return allRequests;
   } catch (error) {
     console.error(error);

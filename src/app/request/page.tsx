@@ -42,11 +42,11 @@ export default async function RequestsPage() {
                 Додає нову заявку в базу даних ремонтних заявок
               </DialogDescription>
             </DialogHeader>
-            <RequestForm />
+            <RequestForm userId={session?.user.id}/>
           </DialogContent>
         </Dialog>
       </div>
-      <RequestsTable />
+      <RequestsTable userId={session?.user.id!}/>
     </div>
   );
 }
