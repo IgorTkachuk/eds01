@@ -46,7 +46,7 @@ export const formSchema = z
     }),
     notes: z.string(),
     performer: z.number(),
-    userId: z.string(),
+    userId: z.string().optional(),
   })
   // .refine((data) => data.finishDT > data.inputDT, {
   //   message: "Дата виконання заявки повинна бути пізніше за дату прийняття",

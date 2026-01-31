@@ -43,7 +43,7 @@ export function LoginForm({
                 <FieldLabel htmlFor='email'>Email</FieldLabel>
                 <Input
                   id='email'
-                  type='email'
+                  type='text'
                   placeholder='m@grmu.com.ua'
                   required
                   onChange={(e) => {
@@ -78,27 +78,42 @@ export function LoginForm({
                   // type='button'
                   disabled={loading}
                   // onClick={singUp}
+                  // onClick={async () => {
+                  //   await signIn.email({
+                  //     email: username,
+                  //     password,
+                  //     fetchOptions: {
+                  //       onRequest: () => {
+                  //         setLoading(true);
+                  //       },
+                  //       onResponse: () => {
+                  //         setLoading(false);
+                  //       },
+                  //       onError: (e) => {
+                  //         if (e.error.code === "INVALID_EMAIL_OR_PASSWORD") {
+                  //           toast.error(
+                  //             "Помилка аутентифікації. Невірний логін або пароль.",
+                  //           );
+                  //         }
+                  //       },
+                  //     },
+                  //     callbackURL: "/request",
+                  //   });
+                  // }}
                   onClick={async () => {
-                    await signIn.email({
-                      email: username,
-                      password,
-                      fetchOptions: {
-                        onRequest: () => {
-                          setLoading(true);
-                        },
-                        onResponse: () => {
-                          setLoading(false);
-                        },
-                        onError: (e) => {
-                          if (e.error.code === "INVALID_EMAIL_OR_PASSWORD") {
-                            toast.error(
-                              "Помилка аутентифікації. Невірний логін або пароль.",
-                            );
-                          }
-                        },
-                      },
+                    await signIn.oauth2({
+                      providerId: "keycloak",
                       callbackURL: "/request",
-                    });
+                      disableRedirect: false,
+                      // scopes: ["openid", "profile", "email"],
+                      requestSignUp: false,
+                      fetchOptions: {
+                        onError: (e) => {
+                          console.log(e);
+                          
+                        }, 
+                      }
+                    })
                   }}
                 >
                   {loading ? (

@@ -69,7 +69,13 @@ export default function RequestForm({ request, userId }: RequestFormProps) {
 
   const [pending, startTransition] = useTransition();
 
+  function onError(errors: any) {
+    console.log("ПОМИЛКИ ФОРМИ:", errors);
+  }
+
   function onSubmit(values: FormValues) {
+    console.log(values);
+    
     let res;
     startTransition(async () => {
       if (request) {
@@ -105,7 +111,7 @@ export default function RequestForm({ request, userId }: RequestFormProps) {
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4 p-4'>
+        <form onSubmit={form.handleSubmit(onSubmit, onError)} className='space-y-4 p-4'>
           <div className='flex gap-20'>
             <div>
               <RqSelect
