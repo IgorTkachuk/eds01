@@ -22,19 +22,22 @@ import { Button } from "./ui/button";
 import { Pencil } from "lucide-react";
 import { DeleteRequestButton } from "./delete-request-button";
 import RequestForm from "./forms/request-form";
+import { getUserRequests } from "@/app/request/action";
+import { DateRange } from "react-day-picker";
 
-interface RequestTableProp {
-  userId: string
-}
-
-export default async function RequestsTable({userId}: RequestTableProp) {
-  const requests = await getRequests(userId);
+export default async function RequestsTable({
+  dateRange,
+}: {
+  dateRange?: DateRange;
+}) {
+  // const requests = await getRequests(userId);
+  const requests = await getUserRequests(dateRange);
   return (
     <Table>
       <TableCaption>Перелік заявок</TableCaption>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-25">Виконавець</TableHead>
+          <TableHead className='w-25'>Виконавець</TableHead>
           <TableHead>Надходження</TableHead>
           <TableHead>Завершено</TableHead>
           <TableHead>ПІБ заявника</TableHead>
@@ -42,13 +45,13 @@ export default async function RequestsTable({userId}: RequestTableProp) {
           <TableHead>Населенний п-т</TableHead>
           <TableHead>Вулиця</TableHead>
           <TableHead>Буд.</TableHead>
-          <TableHead className="text-right">Дії</TableHead>
+          <TableHead className='text-right'>Дії</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {requests.map(({ request: req, street, settlement, performer }) => (
+        {requests.map((req) => (
           <TableRow key={req.id}>
-            <TableCell>{performer?.name}</TableCell>
+            <TableCell>{req.performer?.name}</TableCell>
             <TableCell>
               {format(req.inputdate!, "Pp", { locale: uk })}
             </TableCell>
@@ -57,17 +60,17 @@ export default async function RequestsTable({userId}: RequestTableProp) {
             </TableCell>
             <TableCell>{req.customerFullName}</TableCell>
             <TableCell>{req.customerPhoneNumber}</TableCell>
-            <TableCell>{settlement?.name}</TableCell>
-            <TableCell>{street?.name}</TableCell>
+            <TableCell>{req.settlement?.name}</TableCell>
+            <TableCell>{req.street?.name}</TableCell>
             <TableCell>{req.buildingNumber}</TableCell>
-            <TableCell className="text-right">
+            <TableCell className='text-right'>
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button variant="ghost">
-                    <Pencil className="size-4" />
+                  <Button variant='ghost'>
+                    <Pencil className='size-4' />
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-fit">
+                <DialogContent className='sm:max-w-fit'>
                   <DialogHeader>
                     <DialogTitle>Редагування заявки</DialogTitle>
                     <RequestForm request={req} />

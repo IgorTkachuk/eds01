@@ -56,7 +56,7 @@ export const request = mySchema.table("request", {
   completedWork: varchar("completed_work", { length: 300 }),
   notes: varchar({ length: 300 }),
   performer: integer(),
-  userId: varchar({length: 255})
+  userId: varchar({ length: 255 }),
 });
 
 export const streetRelations = relations(street, ({ many }) => ({
@@ -67,6 +67,14 @@ export const requestRelations = relations(request, ({ one }) => ({
   street: one(street, {
     fields: [request.streetId],
     references: [street.id],
+  }),
+  performer: one(performer, {
+    fields: [request.performer],
+    references: [performer.id],
+  }),
+  settlement: one(settlement, {
+    fields: [request.settlementId],
+    references: [settlement.id],
   }),
 }));
 

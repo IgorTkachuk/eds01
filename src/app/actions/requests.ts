@@ -32,7 +32,6 @@ export async function removeRequest(requestId: number) {
   }
 }
 
-
 export async function updateRequest(data: Request) {
   try {
     await db
@@ -56,11 +55,10 @@ export async function updateRequest(data: Request) {
         performer: data.performer,
       })
       .where(eq(request.id, data.id));
-    
-      return {success: true}
+
+    return { success: true };
   } catch (error) {
     console.error(error);
-    return {success: false}
-    
+    return { success: false };
   }
 }
