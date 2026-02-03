@@ -1,6 +1,6 @@
 import RequestsTable from "@/components/requests-table";
 import { Button } from "@/components/ui/button";
-import { FilePlus2Icon } from "lucide-react";
+import { FilePlus2Icon, CalendarSearch } from "lucide-react";
 
 import {
   Dialog,
@@ -17,8 +17,23 @@ import { signOut } from "@/lib/auth-client";
 import UserPanel from "@/components/user-panel";
 import { getUserGroups } from "../actions/account";
 import { CalendarRange } from "@/components/forms/data-range";
+import { DateRange } from "react-day-picker";
+import { parseISO, format } from "date-fns";
 
-export default async function RequestsPage() {
+export default async function RequestsPage(props: {
+  searchParams?: Promise<{
+    from?: string;
+    to?: string;
+  }>;
+}) {
+  const searchParams = await props.searchParams;
+  const from = searchParams?.from || undefined;
+  const to = searchParams?.to || undefined;
+
+  let dateRange: DateRange | undefined = undefined
+  
+  if(from && to) dateRange = {from: parseISO(from!), to: parseISO(to!)}
+
   const session = await auth.api.getSession({
     headers: await headers(), // you need to pass the headers object.
   });
@@ -31,12 +46,23 @@ export default async function RequestsPage() {
   }
 
   return (
-    <div className='flex flex-col gap-4 max-w-fit mx-auto p-4 md:p-24'>
-      <h1 className='text-2xl font-bold'>Ремонтні заявки</h1>
-      <div className='flex gap-2 items-center'>
+    <div className="flex flex-col gap-4 max-w-fit mx-auto p-4 md:p-24">
+      <h1 className="text-2xl font-bold">Ремонтні заявки</h1>
+      <div className="flex gap-2 items-center">
         <UserPanel userName={session?.user.name} />
       </div>
-      <div className='flex justify-end'>
+      <div>
+        період: &nbsp;
+        {dateRange ? (
+          <span>
+            {format(dateRange?.from!, "dd.MM.yyyy")} -{" "}
+            {format(dateRange?.to!, "dd.MM.yyyy")}
+          </span>
+        ) : (
+          <span>поточний місяць</span>
+        )}
+      </div>
+      <div className="flex justify-end gap-3">
         <Dialog>
           <DialogTrigger asChild>
             <Button>
@@ -44,7 +70,7 @@ export default async function RequestsPage() {
               <FilePlus2Icon />
             </Button>
           </DialogTrigger>
-          <DialogContent className='sm:max-w-fit'>
+          <DialogContent className="sm:max-w-fit">
             <DialogHeader>
               <DialogTitle>Додати заявку</DialogTitle>
               <DialogDescription>
@@ -59,21 +85,21 @@ export default async function RequestsPage() {
           <DialogTrigger asChild>
             <Button>
               Встановити період
-              <FilePlus2Icon />
+              <CalendarSearch/>
             </Button>
           </DialogTrigger>
-          <DialogContent className='sm:max-w-fit'>
+          <DialogContent className="sm:max-w-fit">
             <DialogHeader>
               <DialogTitle>Встановити періоду</DialogTitle>
               <DialogDescription>
                 Встановлює період дат відображення заявок
               </DialogDescription>
             </DialogHeader>
-            <CalendarRange onSetRange={(range) => console.log(range)} />
+            <CalendarRange />
           </DialogContent>
         </Dialog>
       </div>
-      <RequestsTable />
+      {dateRange ? <RequestsTable dateRange={dateRange} /> : <RequestsTable />}
     </div>
   );
 }
