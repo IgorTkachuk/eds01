@@ -7,6 +7,7 @@ import { type DateRange } from "react-day-picker";
 import { asc, eq, gte, lte, and } from "drizzle-orm";
 import { request } from "@/db/schema";
 import { lastDayOfMonth, startOfMonth } from "date-fns";
+import { getUserGroups } from "../actions/account";
 
 export async function getUserRequests(
   range: DateRange = {
@@ -19,8 +20,13 @@ export async function getUserRequests(
   });
 
   if (!session) throw new Error("Unauthorized");
+  const groups = await getUserGroups(session.user.id);
 
-  const where = [eq(request.userId, session.user.id)];
+  const where = [];
+
+  if(!groups.includes("cAdmins")){
+    where.push(eq(request.userId, session.user.id));
+  }
 
   if (range?.from) {
     where.push(gte(request.inputdate, range.from));
@@ -46,3 +52,5 @@ export async function getUserRequests(
   //     .where(and(...filters))
   //     .orderBy(request.createdAt);
 }
+
+export type UserRequest =  Awaited<ReturnType<typeof getUserRequests>>[number]

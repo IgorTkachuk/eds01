@@ -29,18 +29,21 @@ import { getPerformer } from "@/app/actions/search-performer";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-import { Request } from "@/db/schema";
+// import { Request } from "@/db/schema";
 import { updateRequest } from "@/app/actions/requests";
 
 // import { DevTool } from "@hookform/devtools";
 import { Loader2 } from "lucide-react";
+import { UserRequest } from "@/app/request/action";
 
 interface RequestFormProps {
-  request?: Request;
+  request?: UserRequest;
   userId?: string;
 }
 
 export default function RequestForm({ request, userId }: RequestFormProps) {
+  console.log("REQUEST ####: ", request);
+  
   const router = useRouter();
 
   const form = useForm<FormValues>({
@@ -57,7 +60,7 @@ export default function RequestForm({ request, userId }: RequestFormProps) {
       customerPhoneNumber: request?.customerPhoneNumber || "",
       complitedWork: request?.completedWork || "",
       notes: request?.notes || "",
-      performer: request?.performer || undefined,
+      performer: request?.performer?.id || undefined,
       diameterId: request?.diameterId || undefined,
       materialId: request?.materialId || undefined,
       pressureId: request?.pressureId || undefined,
