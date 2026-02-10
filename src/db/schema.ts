@@ -118,6 +118,10 @@ export const user = mySchema.table("user", {
     .notNull(),
   username: text("username").unique(),
   displayUsername: text("display_username"),
+  role: text("role"),
+  banned: boolean("banned").default(false),
+  banReason: text("ban_reason"),
+  banExpires: timestamp("ban_expires"),
 });
 
 export const session = mySchema.table(
@@ -135,6 +139,7 @@ export const session = mySchema.table(
     userId: text("user_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
+    impersonatedBy: text("impersonated_by"),
   },
   (table) => [index("session_userId_idx").on(table.userId)],
 );

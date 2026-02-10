@@ -2,9 +2,13 @@ import { betterAuth } from "better-auth";
 import { nextCookies } from "better-auth/next-js";
 import { username } from "better-auth/plugins";
 import { genericOAuth } from "better-auth/plugins";
-import { keycloak } from "better-auth/plugins";
+import { keycloak, admin } from "better-auth/plugins";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "@/db/drizzle";
+import { tr } from "date-fns/locale";
+import { addBusinessDays } from "date-fns";
+import {adminRole } from "./permissions"
+import { ac } from "./permissions";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -15,22 +19,68 @@ export const auth = betterAuth({
     enabled: true,
   },
   plugins: [
-    // username(), 
+    // username(),
     genericOAuth({
       config: [
-        // {
-        //   providerId: "provider-id",
-        //   clientId: "test-client-id",
-        //   clientSecret: "test-client-secret",
-        //   discoveryUrl: "https://127.0.0.1:8080/.well-known/openid-configuration"
-        // },
-        keycloak({
-          clientId: process.env.KEYCLOAK_CLIENT_ID!,
-          clientSecret: process.env.KEYCLOAK_CLIENT_SECRET!,
-					issuer: process.env.KEYCLOAK_ISSUER!,
-        }),
+        {
+          ...keycloak({
+            clientId: process.env.KEYCLOAK_CLIENT_ID!,
+            clientSecret: process.env.KEYCLOAK_CLIENT_SECRET!,
+            issuer: process.env.KEYCLOAK_ISSUER!,
+          }),
+          discoveryUrl:
+            process.env.KEYCLOAK_ISSUER! + "/.well-known/openid-configuration",
+          userInfoUrl:
+            process.env.KEYCLOAK_ISSUER! + "/protocol/openid-connect/userinfo",
+          overrideUserInfo: true,
+          async getUserInfo(tokens) {
+            if (!tokens.accessToken) {
+              throw new Error("No access token returned from Keycloak");
+            }
+            // 👉 Декодуємо access token
+            const payload = JSON.parse(
+              Buffer.from(
+                tokens.accessToken.split(".")[1],
+                "base64",
+              ).toString(),
+            );
+
+            const realmRoles: string[] = payload.realm_access?.roles ?? [];
+            const groups: string[] = payload.groups ?? [];
+
+            let appRole: "admin" | "user" = "user";
+
+            if (
+              realmRoles.includes("super_admin") ||
+              realmRoles.includes("app_admin")
+            ) {
+              appRole = "admin";
+            }
+
+            return {
+              id: payload.sub,
+              name: payload.name,
+              email: payload.email,
+              image: undefined,
+              emailVerified: payload.email_verified,
+
+              // 👇 передаємо далі в better-auth
+              role: appRole,
+
+              // кастомні поля (можеш зберігати окремо в БД)
+              kcRoles: realmRoles,
+              kcGroups: groups,
+            };
+          },
+        },
       ],
     }),
-    nextCookies()
+    admin({
+      ac,
+      roles: {
+        adminRole,
+      },
+    }),
+    nextCookies(),
   ],
 });

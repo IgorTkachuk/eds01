@@ -22,9 +22,22 @@ export async function getUserRequests(
   if (!session) throw new Error("Unauthorized");
   const groups = await getUserGroups(session.user.id);
 
+  const hasViewAllPermission = await auth.api.userHasPermission({
+    body: {
+      role: "adminRole",
+      permissions: {
+        request: ["viewAll"],
+      },
+    },
+  });
+
   const where = [];
 
-  if(!groups.includes("cAdmins")){
+  // if(!groups.includes("cAdmins")){
+  //   where.push(eq(request.userId, session.user.id));
+  // }
+
+  if(!hasViewAllPermission.success){
     where.push(eq(request.userId, session.user.id));
   }
 

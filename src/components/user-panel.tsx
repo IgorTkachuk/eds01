@@ -16,7 +16,8 @@ export default function UserPanel({ userName }: { userName?: string }) {
           signOut({
             fetchOptions: {
               onSuccess: () => {
-                router.push("/login");
+                // router.push("/login");
+                window.location.href = "/api/auth/logout";
               },
             },
           });
