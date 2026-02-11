@@ -51,7 +51,7 @@ export default async function RequestsPage(props: {
       <div className="flex gap-2 items-center">
         <UserPanel userName={session?.user.name} />
       </div>
-      <div>
+      <div className="text-sm">
         період: &nbsp;
         {dateRange ? (
           <span>

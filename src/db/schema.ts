@@ -10,6 +10,7 @@ import {
   boolean,
   index,
 } from "drizzle-orm/pg-core";
+import { use } from "react";
 
 export const mySchema = pgSchema("postgres");
 
@@ -68,13 +69,41 @@ export const requestRelations = relations(request, ({ one }) => ({
     fields: [request.streetId],
     references: [street.id],
   }),
+  settlement: one(settlement, {
+    fields: [request.settlementId],
+    references: [settlement.id],
+  }),
+  rqCharacter: one(rqCharacter, {
+    fields: [request.rqCharacterId],
+    references: [rqCharacter.id],
+  }),
+  rqFact: one(rqFact, {
+    fields: [request.rqFactId],
+    references: [rqFact.id],
+  }),
+  diameter: one(diameter, {
+    fields: [request.diameterId],
+    references: [diameter.id],
+  }),
+  material: one(material, {
+    fields: [request.materialId],
+    references: [material.id],
+  }),
+  pipeLayingType: one(pipeLayingType, {
+    fields: [request.pipeLayingTypeId],
+    references: [pipeLayingType.id],
+  }),
+  pressure: one(pressure, {
+    fields: [request.pressureId],
+    references: [pressure.id],
+  }),
   performer: one(performer, {
     fields: [request.performer],
     references: [performer.id],
   }),
-  settlement: one(settlement, {
-    fields: [request.settlementId],
-    references: [settlement.id],
+  user: one(user, {
+    fields: [request.userId],
+    references: [user.id],
   }),
 }));
 

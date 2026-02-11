@@ -5,9 +5,7 @@ import { genericOAuth } from "better-auth/plugins";
 import { keycloak, admin } from "better-auth/plugins";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "@/db/drizzle";
-import { tr } from "date-fns/locale";
-import { addBusinessDays } from "date-fns";
-import {adminRole } from "./permissions"
+import {adminRole, userRole } from "./permissions"
 import { ac } from "./permissions";
 
 export const auth = betterAuth({
@@ -78,7 +76,8 @@ export const auth = betterAuth({
     admin({
       ac,
       roles: {
-        adminRole,
+        admin: adminRole,
+        user: userRole,
       },
     }),
     nextCookies(),

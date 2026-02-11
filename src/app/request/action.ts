@@ -20,16 +20,26 @@ export async function getUserRequests(
   });
 
   if (!session) throw new Error("Unauthorized");
-  const groups = await getUserGroups(session.user.id);
+  // const groups = await getUserGroups(session.user.id);
 
-  const hasViewAllPermission = await auth.api.userHasPermission({
-    body: {
-      role: "adminRole",
-      permissions: {
-        request: ["viewAll"],
+  const [{ success: canViewAll }, { success: canViewOwn }] = await Promise.all([
+    auth.api.userHasPermission({
+      body: {
+        userId: session.user.id,
+        permission: {
+          request: ["viewAll"],
+        },
       },
-    },
-  });
+    }),
+    auth.api.userHasPermission({
+      body: {
+        userId: session.user.id,
+        permission: {
+          request: ["viewOwn"],
+        },
+      },
+    }),
+  ]);
 
   const where = [];
 
@@ -37,8 +47,15 @@ export async function getUserRequests(
   //   where.push(eq(request.userId, session.user.id));
   // }
 
-  if(!hasViewAllPermission.success){
+  // if (!canViewAll) {
+  //   where.push(eq(request.userId, session.user.id));
+  // }
+
+  if (canViewAll) {
+  } else if (canViewOwn) {
     where.push(eq(request.userId, session.user.id));
+  } else {
+    throw new Error("Forbidden");
   }
 
   if (range?.from) {
@@ -52,8 +69,15 @@ export async function getUserRequests(
   return await db.query.request.findMany({
     with: {
       street: true,
-      performer: true,
       settlement: true,
+      rqCharacter:true,
+      rqFact: true,
+      diameter: true,
+      material: true,
+      pipeLayingType: true,
+      pressure: true,
+      user: true,
+      performer: true,
     },
     where: and(...where),
     orderBy: [asc(request.inputdate)],
