@@ -27,11 +27,13 @@ import { DateRange } from "react-day-picker";
 
 export default async function RequestsTable({
   dateRange,
+  page,
 }: {
   dateRange?: DateRange;
+  page?: number | undefined;
 }) {
   // const requests = await getRequests(userId);
-  const requests = await getUserRequests(dateRange);
+  const requests = await getUserRequests(dateRange, page);
   return (
     <Table>
       <TableCaption>Перелік заявок</TableCaption>

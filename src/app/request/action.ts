@@ -4,12 +4,28 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { db } from "@/db/drizzle";
 import { type DateRange } from "react-day-picker";
-import { asc, eq, gte, lte, and } from "drizzle-orm";
+import { asc, eq, gte, lte, and, sql } from "drizzle-orm";
 import { request } from "@/db/schema";
 import { lastDayOfMonth, startOfMonth } from "date-fns";
 import { getUserGroups } from "../actions/account";
+import { number } from "zod";
 
-export async function getUserRequests(
+async function getRequestScope(userId: string) {
+  const [{ success: all }, { success: own }] = await Promise.all([
+    auth.api.userHasPermission({
+      body: { userId, permission: { request: ["viewAll"] } },
+    }),
+    auth.api.userHasPermission({
+      body: { userId, permission: { request: ["viewOwn"] } },
+    }),
+  ]);
+
+  if (all) return "all";
+  if (own) return "own";
+  return "none";
+}
+
+async function getRequestCriteria(
   range: DateRange = {
     from: startOfMonth(new Date()),
     to: lastDayOfMonth(new Date()),
@@ -22,39 +38,12 @@ export async function getUserRequests(
   if (!session) throw new Error("Unauthorized");
   // const groups = await getUserGroups(session.user.id);
 
-  const [{ success: canViewAll }, { success: canViewOwn }] = await Promise.all([
-    auth.api.userHasPermission({
-      body: {
-        userId: session.user.id,
-        permission: {
-          request: ["viewAll"],
-        },
-      },
-    }),
-    auth.api.userHasPermission({
-      body: {
-        userId: session.user.id,
-        permission: {
-          request: ["viewOwn"],
-        },
-      },
-    }),
-  ]);
-
   const where = [];
 
-  // if(!groups.includes("cAdmins")){
-  //   where.push(eq(request.userId, session.user.id));
-  // }
-
-  // if (!canViewAll) {
-  //   where.push(eq(request.userId, session.user.id));
-  // }
-
-  if (canViewAll) {
-  } else if (canViewOwn) {
+  const scope = await getRequestScope(session.user.id);
+  if (scope === "own") {
     where.push(eq(request.userId, session.user.id));
-  } else {
+  } else if (scope === "none") {
     throw new Error("Forbidden");
   }
 
@@ -66,11 +55,24 @@ export async function getUserRequests(
     where.push(lte(request.inputdate, range.to));
   }
 
+  return where;
+}
+
+const ITEMS_PER_PAGE = 10;
+export async function getUserRequests(
+  range: DateRange = {
+    from: startOfMonth(new Date()),
+    to: lastDayOfMonth(new Date()),
+  },
+  page?: number,
+) {
+  const where = await getRequestCriteria(range);
+
   return await db.query.request.findMany({
     with: {
       street: true,
       settlement: true,
-      rqCharacter:true,
+      rqCharacter: true,
       rqFact: true,
       diameter: true,
       material: true,
@@ -81,6 +83,12 @@ export async function getUserRequests(
     },
     where: and(...where),
     orderBy: [asc(request.inputdate)],
+    ...(page
+      ? {
+          offset: (page - 1) * ITEMS_PER_PAGE,
+          limit: ITEMS_PER_PAGE,
+        }
+      : {}),
   });
 
   //   return db
@@ -90,4 +98,26 @@ export async function getUserRequests(
   //     .orderBy(request.createdAt);
 }
 
-export type UserRequest =  Awaited<ReturnType<typeof getUserRequests>>[number]
+export async function fetchRequestsPages(
+  range: DateRange = {
+    from: startOfMonth(new Date()),
+    to: lastDayOfMonth(new Date()),
+  },
+) {
+  const where = await getRequestCriteria(range);
+
+  const result = await db
+    .select({
+      count: sql<number>`count(*)`,
+    })
+    .from(request)
+    .where(and(...where));
+
+  const totalRequests = result[0].count;
+
+  const totalPages = Math.ceil(totalRequests / ITEMS_PER_PAGE);
+
+  return totalPages;
+}
+
+export type UserRequest = Awaited<ReturnType<typeof getUserRequests>>[number];

@@ -19,20 +19,24 @@ import { getUserGroups } from "../actions/account";
 import { CalendarRange } from "@/components/forms/data-range";
 import { DateRange } from "react-day-picker";
 import { parseISO, format } from "date-fns";
+import { fetchRequestsPages } from "./action";
+import Pagination2 from "@/components/pagination";
 
 export default async function RequestsPage(props: {
   searchParams?: Promise<{
     from?: string;
     to?: string;
+    page?: string;
   }>;
 }) {
   const searchParams = await props.searchParams;
   const from = searchParams?.from || undefined;
   const to = searchParams?.to || undefined;
+  const page = Number(searchParams?.page) || 1;
 
-  let dateRange: DateRange | undefined = undefined
-  
-  if(from && to) dateRange = {from: parseISO(from!), to: parseISO(to!)}
+  let dateRange: DateRange | undefined = undefined;
+
+  if (from && to) dateRange = { from: parseISO(from!), to: parseISO(to!) };
 
   const session = await auth.api.getSession({
     headers: await headers(), // you need to pass the headers object.
@@ -45,11 +49,13 @@ export default async function RequestsPage(props: {
     return <div>No session</div>;
   }
 
+  const totalPages = await fetchRequestsPages(dateRange);
+
   return (
     <div className="flex flex-col gap-4 max-w-fit mx-auto p-4 md:p-24">
       <h1 className="text-2xl font-bold">Ремонтні заявки</h1>
       <div className="flex gap-2 items-center">
-        <UserPanel userName={session?.user.name} />
+        <UserPanel />
       </div>
       <div className="text-sm">
         період: &nbsp;
@@ -85,7 +91,7 @@ export default async function RequestsPage(props: {
           <DialogTrigger asChild>
             <Button>
               Встановити період
-              <CalendarSearch/>
+              <CalendarSearch />
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-fit">
@@ -99,7 +105,9 @@ export default async function RequestsPage(props: {
           </DialogContent>
         </Dialog>
       </div>
-      {dateRange ? <RequestsTable dateRange={dateRange} /> : <RequestsTable />}
+      {dateRange ? <RequestsTable dateRange={dateRange} page={page} /> : <RequestsTable page={page}/>}
+
+      <Pagination2 totalPages={totalPages} />
     </div>
   );
 }

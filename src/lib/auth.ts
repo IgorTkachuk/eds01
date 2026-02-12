@@ -58,6 +58,7 @@ export const auth = betterAuth({
             return {
               id: payload.sub,
               name: payload.name,
+              username: payload.preferred_username,
               email: payload.email,
               image: undefined,
               emailVerified: payload.email_verified,
