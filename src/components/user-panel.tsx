@@ -37,7 +37,7 @@ export default function UserPanel({ userName }: { userName?: string }) {
 
   return (
     <div className="flex gap-2 items-center">
-      <p>{session.user.name}</p>
+      {/* <p>{session.user.name}</p>
       <img
         src={`/api/user-photo/${session.user.email.split("@")[0]}`}
         alt="User avatar"
@@ -58,7 +58,7 @@ export default function UserPanel({ userName }: { userName?: string }) {
         }}
       >
         Вийти <LogOut className="size-4" />
-      </Button>
+      </Button> */}
       <Button onClick={() => downloadExcel({ dateRange })}>
         {" "}
         Звіт в Excel
