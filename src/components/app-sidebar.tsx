@@ -11,6 +11,8 @@ import { NavUser } from "./nav-user";
 import { NavMain } from "./nav-main";
 import { BookOpen, Wrench } from "lucide-react";
 
+const dictionariesBasePath = "/admin/dictionaries/";
+
 const navMain = [
   {
     title: "Ремонтні заявки",
@@ -24,39 +26,39 @@ const navMain = [
     items: [
       {
         title: "Населенний пункт",
-        url: "#",
+        url: `${dictionariesBasePath}settlement`,
       },
       {
         title: "Вулиця",
-        url: "/dict/street",
+        url: `${dictionariesBasePath}street`,
       },
       {
         title: "Характер заявки",
-        url: "#",
+        url: `${dictionariesBasePath}rqType`,
       },
       {
         title: "Фактична причина заявки",
-        url: "#",
+        url: `${dictionariesBasePath}rqFact`,
       },
       {
         title: "Діаметер",
-        url: "#",
+        url: `${dictionariesBasePath}diameter`,
       },
       {
         title: "Матеріал",
-        url: "#",
+        url: `${dictionariesBasePath}material`,
       },
       {
         title: "Тиск",
-        url: "#",
+        url: `${dictionariesBasePath}pressure`,
       },
       {
         title: "Розташування газопроводу",
-        url: "#",
+        url: `${dictionariesBasePath}pipeLayingType`,
       },
       {
         title: "Виконавці",
-        url: "#",
+        url: `${dictionariesBasePath}performer`,
       },
     ],
   },

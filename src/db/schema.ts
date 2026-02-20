@@ -109,27 +109,27 @@ export const requestRelations = relations(request, ({ one }) => ({
 
 export const pressure = mySchema.table("pressure", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  name: varchar({ length: 255 }),
+  name: varchar({ length: 255 }).notNull(),
 });
 
 export const material = mySchema.table("material", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  name: varchar({ length: 255 }),
+  name: varchar({ length: 255 }).notNull(),
 });
 
 export const diameter = mySchema.table("diameter", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  name: varchar({ length: 255 }),
+  name: varchar({ length: 255 }).notNull(),
 });
 
 export const pipeLayingType = mySchema.table("pipe_laying_type", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  name: varchar({ length: 255 }),
+  name: varchar({ length: 255 }).notNull(),
 });
 
 export const performer = mySchema.table("performer", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  name: varchar({ length: 60 }),
+  name: varchar({ length: 60 }).notNull(),
 });
 
 // Best Auth
