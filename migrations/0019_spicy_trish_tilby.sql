@@ -1,0 +1,1 @@
+ALTER TABLE "postgres"."request" ADD CONSTRAINT "request_material_fk" FOREIGN KEY ("materialId") REFERENCES "postgres"."material"("id") ON DELETE restrict ON UPDATE no action;

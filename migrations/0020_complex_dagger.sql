@@ -1,0 +1,11 @@
+ALTER TABLE "postgres"."request" DROP CONSTRAINT "request_streetId_street_id_fk";
+--> statement-breakpoint
+ALTER TABLE "postgres"."request" ADD CONSTRAINT "request_settlementId_settlement_id_fk" FOREIGN KEY ("settlementId") REFERENCES "postgres"."settlement"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "postgres"."request" ADD CONSTRAINT "request_rqCharacterId_rqcharacter_id_fk" FOREIGN KEY ("rqCharacterId") REFERENCES "postgres"."rqcharacter"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "postgres"."request" ADD CONSTRAINT "request_rqFactId_rqfact_id_fk" FOREIGN KEY ("rqFactId") REFERENCES "postgres"."rqfact"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "postgres"."request" ADD CONSTRAINT "request_diameterId_diameter_id_fk" FOREIGN KEY ("diameterId") REFERENCES "postgres"."diameter"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "postgres"."request" ADD CONSTRAINT "request_pipeLayingTypeId_pipe_laying_type_id_fk" FOREIGN KEY ("pipeLayingTypeId") REFERENCES "postgres"."pipe_laying_type"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "postgres"."request" ADD CONSTRAINT "request_pressureId_pressure_id_fk" FOREIGN KEY ("pressureId") REFERENCES "postgres"."pressure"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "postgres"."request" ADD CONSTRAINT "request_performer_performer_id_fk" FOREIGN KEY ("performer") REFERENCES "postgres"."performer"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "postgres"."request" ADD CONSTRAINT "request_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "postgres"."user"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "postgres"."request" ADD CONSTRAINT "request_streetId_street_id_fk" FOREIGN KEY ("streetId") REFERENCES "postgres"."street"("id") ON DELETE restrict ON UPDATE no action;

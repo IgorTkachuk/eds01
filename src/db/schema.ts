@@ -9,6 +9,7 @@ import {
   text,
   boolean,
   index,
+  foreignKey,
 } from "drizzle-orm/pg-core";
 import { use } from "react";
 
@@ -39,26 +40,50 @@ export const rqCharacter = mySchema.table("rqcharacter", {
   name: varchar({ length: 255 }).notNull(),
 });
 
-export const request = mySchema.table("request", {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  streetId: integer().references(() => street.id),
-  settlementId: integer(),
-  rqCharacterId: integer(),
-  rqFactId: integer(),
-  inputdate: timestamp({ withTimezone: true }),
-  finishdate: timestamp({ withTimezone: true }),
-  diameterId: integer(),
-  materialId: integer(),
-  pipeLayingTypeId: integer(),
-  pressureId: integer(),
-  buildingNumber: varchar("building_number", { length: 10 }),
-  customerFullName: varchar("customer_full_name", { length: 255 }),
-  customerPhoneNumber: varchar("customer_phone_number", { length: 13 }),
-  completedWork: varchar("completed_work", { length: 300 }),
-  notes: varchar({ length: 300 }),
-  performer: integer(),
-  userId: varchar({ length: 255 }),
-});
+export const request = mySchema.table(
+  "request",
+  {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    streetId: integer().references(() => street.id, { onDelete: "restrict" }),
+    settlementId: integer().references(() => settlement.id, {
+      onDelete: "restrict",
+    }),
+    rqCharacterId: integer().references(() => rqCharacter.id, {
+      onDelete: "restrict",
+    }),
+    rqFactId: integer().references(() => rqFact.id, { onDelete: "restrict" }),
+    inputdate: timestamp({ withTimezone: true }),
+    finishdate: timestamp({ withTimezone: true }),
+    diameterId: integer().references(() => diameter.id, {
+      onDelete: "restrict",
+    }),
+    materialId: integer(),
+    pipeLayingTypeId: integer().references(() => pipeLayingType.id, {
+      onDelete: "restrict",
+    }),
+    pressureId: integer().references(() => pressure.id, {
+      onDelete: "restrict",
+    }),
+    buildingNumber: varchar("building_number", { length: 10 }),
+    customerFullName: varchar("customer_full_name", { length: 255 }),
+    customerPhoneNumber: varchar("customer_phone_number", { length: 13 }),
+    completedWork: varchar("completed_work", { length: 300 }),
+    notes: varchar({ length: 300 }),
+    performer: integer().references(() => performer.id, {
+      onDelete: "restrict",
+    }),
+    userId: varchar({ length: 255 }).references(() => user.id, {
+      onDelete: "restrict",
+    }),
+  },
+  (table) => ({
+    materialFk: foreignKey({
+      columns: [table.materialId],
+      foreignColumns: [material.id],
+      name: "request_material_fk",
+    }).onDelete("restrict"),
+  }),
+);
 
 export const streetRelations = relations(street, ({ many }) => ({
   request: many(request),

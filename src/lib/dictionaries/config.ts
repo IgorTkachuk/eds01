@@ -1,4 +1,4 @@
-import { settlement } from "@/db/schema";
+import { rqCharacter, settlement } from "@/db/schema";
 import { street } from "@/db/schema";
 import { rqType } from "@/db/schema";
 import { rqFact } from "@/db/schema";
@@ -18,7 +18,7 @@ export const dictionaries = {
     label: "Вулиця",
   },
   rqType: {
-    table: rqType,
+    table: rqCharacter,
     label: "Характер заявки",
   },
   rqFact: {

@@ -134,6 +134,20 @@
       "when": 1771592484044,
       "tag": "0018_peaceful_diamondback",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1771936513520,
+      "tag": "0019_spicy_trish_tilby",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1771937404862,
+      "tag": "0020_complex_dagger",
+      "breakpoints": true
     }
   ]
 }
