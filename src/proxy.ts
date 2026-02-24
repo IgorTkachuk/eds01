@@ -18,5 +18,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/request"], // Specify the routes the middleware applies to
+  matcher: ["/request", "/admin/:path*"], // Specify the routes the middleware applies to
 };

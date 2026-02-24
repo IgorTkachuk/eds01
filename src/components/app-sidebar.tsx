@@ -10,6 +10,8 @@ import {
 import { NavUser } from "./nav-user";
 import { NavMain } from "./nav-main";
 import { BookOpen, Wrench } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+import { useEffect, useState } from "react";
 
 const dictionariesBasePath = "/admin/dictionaries/";
 
@@ -65,11 +67,33 @@ const navMain = [
 ];
 
 export function AppSidebar() {
+  const { data: session } = authClient.useSession();
+  const [nav, setNav] = useState(navMain);
+
+  useEffect(() => {
+    async function getPermissions() {
+      if (!session?.user?.id) return;
+
+      const { data } = await authClient.admin.hasPermission({
+        userId: session?.user.id,
+        permission: { dictionary: ["hasAccess"] },
+      });
+
+      console.log("RES #####: ", data?.success);
+
+      if (!data?.success) {
+        setNav([navMain[0]]);
+      }
+    }
+
+    getPermissions();
+  }, [session]);
+
   return (
     <Sidebar>
       <SidebarHeader />
       <SidebarContent>
-        <NavMain items={navMain} />
+        <NavMain items={nav} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />
