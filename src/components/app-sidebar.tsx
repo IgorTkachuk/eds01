@@ -82,7 +82,8 @@ export function AppSidebar() {
       console.log("RES #####: ", data?.success);
 
       if (!data?.success) {
-        setNav([navMain[0]]);
+        // setNav([navMain[0]]);
+        setNav(navMain.filter((item) => item.title !== "Довідники"));
       }
     }
 

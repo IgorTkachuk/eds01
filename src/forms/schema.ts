@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { string, z } from "zod";
 
 export const formSchema = z
   .object({
@@ -70,4 +70,11 @@ export const formSchema = z
     }
   });
 
+export const dictionaryCRUDSchema = z.object({
+  name: string({
+    message: "Значеня поля не може бути коротшим за 5 символів",
+  }).min(5),
+});
+
 export type FormValues = z.infer<typeof formSchema>;
+export type dictionaryCRUDValues = z.infer<typeof dictionaryCRUDSchema>;

@@ -30,9 +30,12 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
-import { FilePlus2Icon, Loader, Trash2 } from "lucide-react";
+import { FilePlus2Icon, Loader, Pencil, Trash2 } from "lucide-react";
 
 import { toast } from "sonner";
+import { useController, useForm } from "react-hook-form";
+import { dictionaryCRUDSchema, dictionaryCRUDValues } from "@/forms/schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 type Props = {
   type: DictionaryType;
@@ -46,6 +49,7 @@ export default function DictionaryCrud({ type, label, initialData }: Props) {
   // const [isOpen, setIsOpen] = useState(false);
 
   const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [editId, setEditId] = useState<number | null>(null);
 
   const [pending, startTransition] = useTransition();
 
@@ -76,6 +80,30 @@ export default function DictionaryCrud({ type, label, initialData }: Props) {
   useEffect(() => {
     setItems(initialData);
   }, [initialData]);
+
+  const editForm = useForm<dictionaryCRUDValues>({
+    resolver: zodResolver(dictionaryCRUDSchema),
+    defaultValues: {
+      name: "Найменування",
+    },
+  });
+
+  function onEdit(values: dictionaryCRUDValues) {
+    if (!editId) return;
+
+    startTransition(async () => {
+      const result = await updateDictionaryItem(type, editId, values.name);
+
+      if (result.success) {
+        setItems((prev) =>
+          prev.map((i) => (i.id === editId ? { ...i, name: values.name } : i)),
+        );
+
+        toast.success("Елемент оновлено");
+        setEditId(null);
+      }
+    });
+  }
 
   return (
     <div className='flex flex-col gap-4 max-w-fit mx-auto p-4 md:p-24'>
@@ -131,6 +159,47 @@ export default function DictionaryCrud({ type, label, initialData }: Props) {
               <TableCell className='font-normal'>{item.name}</TableCell>
               <TableCell className='text-right'>
                 {/* <Dialog open={isOpen} onOpenChange={setIsOpen}> */}
+
+                {/* EDIT BUTTON */}
+                <Dialog
+                  open={editId === item.id}
+                  onOpenChange={(open) => {
+                    if (open) {
+                      setEditId(item.id);
+                      editForm.reset({ name: item.name });
+                    } else {
+                      setEditId(null);
+                    }
+                  }}
+                >
+                  <DialogTrigger asChild>
+                    <Button variant='ghost'>
+                      <Pencil className='size-4' />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className='w-175'>
+                    <DialogHeader>
+                      <DialogTitle>Відредагувати елемент довідника</DialogTitle>
+                      <DialogDescription>
+                        Редагує елемент довідника
+                      </DialogDescription>
+                    </DialogHeader>
+                    <Input
+                      {...editForm.register("name")}
+                      placeholder='Найменування'
+                    />
+                    <DialogFooter>
+                      <DialogClose asChild>
+                        <Button variant='outline'>Відмінити</Button>
+                      </DialogClose>
+                      <Button onClick={editForm.handleSubmit(onEdit)}>
+                        Зберегти
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+
+                {/* DELETE BUUTTON */}
                 <Dialog
                   open={deleteId === item.id}
                   onOpenChange={(open) => setDeleteId(open ? item.id : null)}
