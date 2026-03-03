@@ -71,9 +71,9 @@ export const formSchema = z
   });
 
 export const dictionaryCRUDSchema = z.object({
-  name: string({
+  name: string().min(5, {
     message: "Значеня поля не може бути коротшим за 5 символів",
-  }).min(5),
+  }),
 });
 
 export type FormValues = z.infer<typeof formSchema>;

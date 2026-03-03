@@ -192,7 +192,13 @@ export default function DictionaryCrud({ type, label, initialData }: Props) {
                       <DialogClose asChild>
                         <Button variant='outline'>Відмінити</Button>
                       </DialogClose>
-                      <Button onClick={editForm.handleSubmit(onEdit)}>
+                      <Button
+                        onClick={editForm.handleSubmit(onEdit, (formErrors) => {
+                          toast.error(
+                            formErrors.name?.message || "Помилка валідації",
+                          );
+                        })}
+                      >
                         Зберегти
                       </Button>
                     </DialogFooter>
