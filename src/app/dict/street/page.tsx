@@ -10,3 +10,5 @@ export default function DictStreet () {
     </div>
   );
 }
+
+export const dynamic = 'force-dynamic'
