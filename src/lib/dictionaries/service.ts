@@ -40,7 +40,7 @@ export async function deleteDictionaryItem(type: DictionaryType, id: number) {
     return { success: true };
   } catch (err: any) {
     const pgError = err.cause ?? err;
-    if (pgError.code === "23503") {
+    if (pgError.code === "23001") {
       return {
         success: false,
         reason: "Елемент використовується у пов'язанних записах",

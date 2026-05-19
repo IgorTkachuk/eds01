@@ -1,0 +1,60 @@
+services:
+  nextjs-standalone:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        HTTP_PROXY: ${HTTP_PROXY}
+        HTTPS_PROXY: ${HTTPS_PROXY}
+
+    image: nextjs-rprq
+    container_name: nextjs-rprq
+
+    env_file:
+      - .env.rprq
+
+    environment:
+      NODE_ENV: production
+
+    restart: unless-stopped
+
+    networks:
+      - rprq
+      - db-network
+
+    extra_hosts:
+      - "${AUTH_HOST}:${AUTH_IP}"
+      - "${CA_HOST}:${CA_IP}"
+
+    labels:
+      - "traefik.enable=true"
+
+      # redirect http -> https
+      - "traefik.http.middlewares.rprq-redirect-websecure.redirectscheme.scheme=https"
+
+      # HTTP
+      - "traefik.http.routers.router1.rule=Host(`${APP_HOST}`)"
+      - "traefik.http.routers.router1.entrypoints=web"
+      - "traefik.http.routers.router1.middlewares=rprq-redirect-websecure"
+      - "traefik.http.routers.router1.service=rprq-web"
+
+      # HTTPS
+      - "traefik.http.routers.router2.rule=Host(`${APP_HOST}`)"
+      - "traefik.http.routers.router2.entrypoints=websecure"
+      - "traefik.http.routers.router2.tls=true"
+      - "traefik.http.routers.router2.tls.certresolver=myresolver"
+      - "traefik.http.routers.router2.service=rprq-websecure"
+
+      # Services
+      - "traefik.http.services.rprq-web.loadbalancer.server.port=${APP_PORT}"
+      - "traefik.http.services.rprq-websecure.loadbalancer.server.port=${APP_PORT}"
+
+      # Network
+      - "traefik.docker.network=rprq"
+
+networks:
+  rprq:
+    external: true
+
+  db-network:
+    external: true

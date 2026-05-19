@@ -16,6 +16,9 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
+  trustedOrigins: [
+    "https://rprq.cv.grmu.com.ua"
+  ],
   plugins: [
     // username(),
     genericOAuth({

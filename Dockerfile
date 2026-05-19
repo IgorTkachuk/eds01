@@ -102,8 +102,17 @@ COPY --from=builder --chown=node:node /app/.next/static ./.next/static
 # cached responses are available immediately on startup, uncomment this line:
 # COPY --from=builder --chown=node:node /app/.next/cache ./.next/cache
 
+COPY --from=smallstep/step-cli /usr/local/bin/step /usr/local/bin/
+RUN apt-get update && apt-get install -y curl ca-certificates
+
+COPY wrapper.sh /wrapper.sh
+RUN chmod 700 /wrapper.sh
+RUN chown node:node /wrapper.sh
+
+ENTRYPOINT ["/wrapper.sh"]
+
 # Switch to non-root user for security best practices
-USER node
+USER root
 
 # Expose port 3000 to allow HTTP traffic
 EXPOSE 3000
