@@ -51,6 +51,25 @@ services:
 
       # Network
       - "traefik.docker.network=rprq"
+ 
+  rprq-db:
+    image: postgres:18.3
+    container_name: rprq-db
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_SCHEMA=postgres
+    restart: unless-stopped
+    networks:
+      - db-network
+    volumes:
+      - type: volume
+        source: rprq-pg-data
+        target:  /var/lib/postgresql
+
+volumes:
+  rprq-pg-data:
+    external: true
+
 
 networks:
   rprq:

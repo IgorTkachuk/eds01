@@ -17,7 +17,8 @@ export const auth = betterAuth({
     enabled: true,
   },
   trustedOrigins: [
-    "https://rprq.cv.grmu.com.ua"
+//  "https://rprq.cv.grmu.com.ua",
+    process.env.BETTER_AUTH_URL!
   ],
   plugins: [
     // username(),
