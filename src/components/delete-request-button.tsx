@@ -28,8 +28,7 @@ export function DeleteRequestButton({ requestId }: DeleteRequestButtonProps) {
   const handleDelete = () => {
     startTransition(async () => {
       try {
-        const res = await removeRequest(requestId);
-        console.log(res);
+        await removeRequest(requestId);
         toast.success("Заявка видалена");
         setIsOpen(false);
         router.refresh();

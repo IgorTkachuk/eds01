@@ -24,8 +24,6 @@ export function RqTextarea({
     control,
   });
 
-  console.log(field.name, field.value);
-
   return (
     <div className={cn("mb-2", { className })}>
       <Field>

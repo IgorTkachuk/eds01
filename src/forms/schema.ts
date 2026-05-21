@@ -32,20 +32,23 @@ export const formSchema = z
     pressureId: z.number({
       message: "Вкажіть тиск",
     }),
-    buildingNumber: z.string({
-      message: "Вкажіть номер будівлі",
-    }),
-    customerFullName: z.string({
+    buildingNumber: z
+      .string()
+      .trim()
+      .min(1, { message: "Вкажіть номер будівлі" }),
+    customerFullName: z.string().trim().min(5, {
       message: "Вкажіть ПІБ споживача",
     }),
-    customerPhoneNumber: z.string({
+    customerPhoneNumber: z.string().trim().min(6, {
       message: "Вкажіть номер телефону споживача",
     }),
     complitedWork: z.string({
       message: "Вкажіть виконані роботи",
     }),
     notes: z.string(),
-    performer: z.number(),
+    performer: z.number({
+      message: "Вкажіть виконавця робіт",
+    }),
     userId: z.string().optional(),
   })
   // .refine((data) => data.finishDT > data.inputDT, {

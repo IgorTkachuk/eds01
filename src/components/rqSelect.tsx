@@ -45,8 +45,6 @@ export function RqSelect({
   });
   const [items, setItems] = useState<Item[]>([]);
 
-  console.log(field.name, field.value);
-
   // const [selectKey, setSelectKey] = useState(0);
 
   // useEffect(() => {

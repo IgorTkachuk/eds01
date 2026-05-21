@@ -39,11 +39,14 @@ import { UserRequest } from "@/app/request/action";
 interface RequestFormProps {
   request?: UserRequest;
   userId?: string;
+  onSuccess?: () => void;
 }
 
-export default function RequestForm({ request, userId }: RequestFormProps) {
-  console.log("REQUEST ####: ", request);
-  
+export default function RequestForm({
+  request,
+  userId,
+  onSuccess,
+}: RequestFormProps) {
   const router = useRouter();
 
   const form = useForm<FormValues>({
@@ -65,7 +68,7 @@ export default function RequestForm({ request, userId }: RequestFormProps) {
       materialId: request?.materialId || undefined,
       pressureId: request?.pressureId || undefined,
       pipeLayingTypeId: request?.pipeLayingTypeId || undefined,
-      userId: userId || undefined
+      userId: userId || undefined,
     },
     mode: "onChange",
   });
@@ -77,8 +80,6 @@ export default function RequestForm({ request, userId }: RequestFormProps) {
   }
 
   function onSubmit(values: FormValues) {
-    console.log(values);
-    
     let res;
     startTransition(async () => {
       if (request) {
@@ -88,12 +89,11 @@ export default function RequestForm({ request, userId }: RequestFormProps) {
           finishdate: values.finishDT,
           completedWork: values.complitedWork,
           id: request.id,
-          userId: userId!
+          userId: userId!,
         });
       } else {
         res = await saveRequestAction(values);
       }
-      console.log("Збережено", res);
 
       if (res?.success) {
         toast.success(`Заявку ${request ? "оновлено" : "збережено"}`, {
@@ -105,6 +105,7 @@ export default function RequestForm({ request, userId }: RequestFormProps) {
           finishDT: values.finishDT,
         });
         router.refresh();
+        onSuccess?.();
       } else {
         toast.error(`Помилка ${request ? "оновлення" : "збереження"}`);
       }
@@ -114,7 +115,10 @@ export default function RequestForm({ request, userId }: RequestFormProps) {
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit, onError)} className='space-y-4 p-4'>
+        <form
+          onSubmit={form.handleSubmit(onSubmit, onError)}
+          className='space-y-4 p-4'
+        >
           <div className='flex gap-20'>
             <div>
               <RqSelect

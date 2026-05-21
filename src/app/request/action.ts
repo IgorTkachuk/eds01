@@ -6,7 +6,7 @@ import { db } from "@/db/drizzle";
 import { type DateRange } from "react-day-picker";
 import { asc, eq, gte, lte, and, sql } from "drizzle-orm";
 import { request } from "@/db/schema";
-import { lastDayOfMonth, startOfMonth } from "date-fns";
+import { addMonths, lastDayOfMonth, startOfMonth } from "date-fns";
 import { getUserGroups } from "../actions/account";
 import { number } from "zod";
 
@@ -62,7 +62,7 @@ const ITEMS_PER_PAGE = 10;
 export async function getUserRequests(
   range: DateRange = {
     from: startOfMonth(new Date()),
-    to: lastDayOfMonth(new Date()),
+    to: addMonths(startOfMonth(new Date()), 1),
   },
   page?: number,
 ) {

@@ -46,6 +46,23 @@ export function DatePicker({ control, fieldName, caption }: Props) {
     field.onChange(newDate);
   }
 
+  function handleDate(date: Date): void {
+    let workDate;
+
+    if (!field.value) {
+      workDate = new Date();
+    } else {
+      workDate = new Date(field.value);
+    }
+
+    const hours = workDate.getHours();
+    const minutes = workDate.getMinutes();
+
+    date.setHours(hours, minutes);
+
+    field.onChange(date);
+  }
+
   return (
     <div className='mb-4'>
       <div className='flex'>
@@ -77,8 +94,12 @@ export function DatePicker({ control, fieldName, caption }: Props) {
                 mode='single'
                 selected={date}
                 onSelect={(date) => {
-                  // setDate(date);
-                  field.onChange(date);
+                  // field.onChange(date);
+                  if (date) {
+                    console.log(date);
+
+                    handleDate(date);
+                  }
                 }}
                 locale={uk}
               />

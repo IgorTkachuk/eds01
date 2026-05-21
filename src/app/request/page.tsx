@@ -21,6 +21,7 @@ import { DateRange } from "react-day-picker";
 import { parseISO, format } from "date-fns";
 import { fetchRequestsPages } from "./action";
 import Pagination2 from "@/components/pagination";
+import AddRequestDialog from "@/components/AddRequestDialog";
 
 export default async function RequestsPage(props: {
   searchParams?: Promise<{
@@ -43,8 +44,7 @@ export default async function RequestsPage(props: {
   });
 
   if (session) {
-    const groups = await getUserGroups(session.user.id);
-    console.log("SESSION, GROUPS ####: ", session, groups);
+    await getUserGroups(session.user.id);
   } else {
     return <div>No session</div>;
   }
@@ -52,12 +52,12 @@ export default async function RequestsPage(props: {
   const totalPages = await fetchRequestsPages(dateRange);
 
   return (
-    <div className="flex flex-col gap-4 max-w-fit mx-auto p-4 md:p-24">
-      <h1 className="text-2xl font-bold">Ремонтні заявки</h1>
-      <div className="flex gap-2 items-center">
+    <div className='flex flex-col gap-4 max-w-fit mx-auto p-4 md:p-24'>
+      <h1 className='text-2xl font-bold'>Ремонтні заявки</h1>
+      <div className='flex gap-2 items-center'>
         <UserPanel />
       </div>
-      <div className="text-sm">
+      <div className='text-sm'>
         період: &nbsp;
         {dateRange ? (
           <span>
@@ -68,24 +68,8 @@ export default async function RequestsPage(props: {
           <span>поточний місяць</span>
         )}
       </div>
-      <div className="flex justify-end gap-3">
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button>
-              Додати заявку
-              <FilePlus2Icon />
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-fit">
-            <DialogHeader>
-              <DialogTitle>Додати заявку</DialogTitle>
-              <DialogDescription>
-                Додає нову заявку в базу даних ремонтних заявок
-              </DialogDescription>
-            </DialogHeader>
-            <RequestForm userId={session?.user.id} />
-          </DialogContent>
-        </Dialog>
+      <div className='flex justify-end gap-3'>
+        <AddRequestDialog userId={session?.user.id} />
 
         <Dialog>
           <DialogTrigger asChild>
@@ -94,7 +78,7 @@ export default async function RequestsPage(props: {
               <CalendarSearch />
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-fit">
+          <DialogContent className='sm:max-w-fit'>
             <DialogHeader>
               <DialogTitle>Встановити періоду</DialogTitle>
               <DialogDescription>
@@ -105,7 +89,11 @@ export default async function RequestsPage(props: {
           </DialogContent>
         </Dialog>
       </div>
-      {dateRange ? <RequestsTable dateRange={dateRange} page={page} /> : <RequestsTable page={page}/>}
+      {dateRange ? (
+        <RequestsTable dateRange={dateRange} page={page} />
+      ) : (
+        <RequestsTable page={page} />
+      )}
 
       <Pagination2 totalPages={totalPages} />
     </div>

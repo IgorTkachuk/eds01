@@ -50,10 +50,8 @@ export default function StreetForm() {
 
   function onSubmit(values: FormValues) {
     startTransition(async () => {
-      const res = await saveRequestAction(values);
-      console.log("Збережено", res);
+      await saveRequestAction(values);
     });
-    // console.log(values);
   }
 
   return (

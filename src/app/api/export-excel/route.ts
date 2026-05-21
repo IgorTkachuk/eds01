@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import ExcelJS from "exceljs";
 import path from "path";
-import { addDays } from "date-fns";
+import { addDays, format } from "date-fns";
 import { getUserRequests } from "@/app/request/action";
+import { uk } from "date-fns/locale";
 
 const TEMPLATE_PATH = path.join(process.cwd(), "templates", "templ01.xlsx");
 const DATA_START_ROW = 2;
@@ -22,7 +23,7 @@ function parseDate(value: string | null, fallback: Date) {
 function fillRow(
   worksheet: ExcelJS.Worksheet,
   rowNumber: number,
-  request: Awaited<ReturnType<typeof getUserRequests>>[number]
+  request: Awaited<ReturnType<typeof getUserRequests>>[number],
 ) {
   const row = worksheet.getRow(rowNumber);
 
@@ -34,9 +35,11 @@ function fillRow(
   row.getCell(6).value = request.street?.name ?? "";
   row.getCell(7).value = request.buildingNumber ?? "";
   row.getCell(8).value = request.rqCharacter?.name ?? "";
-  row.getCell(9).value = request.inputdate ?? "";
+  row.getCell(9).value =
+    format(request.inputdate!, "dd.MM.y kk:mm", { locale: uk }) ?? "";
   row.getCell(9).numFmt = "dd.mm.yyyy";
-  row.getCell(10).value = request.finishdate ?? "";
+  row.getCell(10).value =
+    format(request.finishdate!, "dd.MM.y kk:mm", { locale: uk }) ?? "";
   row.getCell(10).numFmt = "dd.mm.yyyy";
   row.getCell(11).value = request.diameter?.name ?? "";
   row.getCell(12).value = request.material?.name ?? "";
@@ -45,7 +48,6 @@ function fillRow(
   row.getCell(15).value = request.completedWork ?? "";
   row.getCell(16).value = request.notes ?? "";
   row.getCell(17).value = request.user?.name ?? "";
-  
 
   row.commit?.(); // безпечно навіть якщо streaming не використовується
 }
@@ -54,14 +56,14 @@ function writePeriodRow(
   worksheet: ExcelJS.Worksheet,
   rowNumber: number,
   from: Date,
-  to: Date
+  to: Date,
 ) {
   const row = worksheet.getRow(rowNumber);
 
-  row.getCell(1).value = from;
+  row.getCell(1).value = format(from, "dd.MM.y", { locale: uk });
   row.getCell(1).numFmt = "dd.mm.yyyy";
 
-  row.getCell(2).value = to;
+  row.getCell(2).value = format(to, "dd.MM.y", { locale: uk });
   row.getCell(2).numFmt = "dd.mm.yyyy";
 }
 
@@ -102,7 +104,7 @@ export async function GET(request: NextRequest) {
     console.error("Report generation failed:", error);
     return NextResponse.json(
       { error: "Failed to generate report" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
