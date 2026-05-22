@@ -4,6 +4,7 @@ import path from "path";
 import { addDays, format } from "date-fns";
 import { getUserRequests } from "@/app/request/action";
 import { uk } from "date-fns/locale";
+import { formatInTimeZone } from "date-fns-tz";
 
 const TEMPLATE_PATH = path.join(process.cwd(), "templates", "templ01.xlsx");
 const DATA_START_ROW = 2;
@@ -36,10 +37,12 @@ function fillRow(
   row.getCell(7).value = request.buildingNumber ?? "";
   row.getCell(8).value = request.rqCharacter?.name ?? "";
   row.getCell(9).value =
-    format(request.inputdate!, "dd.MM.y kk:mm", { locale: uk }) ?? "";
+    formatInTimeZone(request.inputdate!, "Europe/Kyiv", "dd.MM.yyyy HH:mm") ??
+    "";
   row.getCell(9).numFmt = "dd.mm.yyyy";
   row.getCell(10).value =
-    format(request.finishdate!, "dd.MM.y kk:mm", { locale: uk }) ?? "";
+    formatInTimeZone(request.finishdate!, "Europe/Kyiv", "dd.MM.yyyy HH:mm") ??
+    "";
   row.getCell(10).numFmt = "dd.mm.yyyy";
   row.getCell(11).value = request.diameter?.name ?? "";
   row.getCell(12).value = request.material?.name ?? "";

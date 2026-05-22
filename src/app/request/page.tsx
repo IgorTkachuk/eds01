@@ -22,6 +22,7 @@ import { parseISO, format } from "date-fns";
 import { fetchRequestsPages } from "./action";
 import Pagination2 from "@/components/pagination";
 import AddRequestDialog from "@/components/AddRequestDialog";
+import { formatInTimeZone } from "date-fns-tz";
 
 export default async function RequestsPage(props: {
   searchParams?: Promise<{
@@ -61,8 +62,18 @@ export default async function RequestsPage(props: {
         період: &nbsp;
         {dateRange ? (
           <span>
-            {format(dateRange?.from!, "dd.MM.yyyy")} -{" "}
-            {format(dateRange?.to!, "dd.MM.yyyy")}
+            {formatInTimeZone(
+              dateRange?.from!,
+              "Europe/Kyiv",
+              "dd.MM.yyyy HH:mm",
+            )}{" "}
+            -{" "}
+            {formatInTimeZone(
+              dateRange?.to!,
+              "Europe/Kyiv",
+              "dd.MM.yyyy HH:mm",
+            )}{" "}
+            -{" "}
           </span>
         ) : (
           <span>поточний місяць</span>
