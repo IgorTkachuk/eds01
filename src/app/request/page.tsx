@@ -72,8 +72,7 @@ export default async function RequestsPage(props: {
               dateRange?.to!,
               "Europe/Kyiv",
               "dd.MM.yyyy HH:mm",
-            )}{" "}
-            -{" "}
+            )}
           </span>
         ) : (
           <span>поточний місяць</span>

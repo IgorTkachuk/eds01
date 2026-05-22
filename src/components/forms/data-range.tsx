@@ -13,7 +13,11 @@ import { uk } from "react-day-picker/locale";
 export function CalendarRange() {
   const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
     from: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-    to: new Date(),
+    to: new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      new Date().getDay(),
+    ),
   });
 
   const searchParams = useSearchParams();
