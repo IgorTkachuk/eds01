@@ -16,7 +16,7 @@ export function CalendarRange() {
     to: new Date(
       new Date().getFullYear(),
       new Date().getMonth(),
-      new Date().getDay(),
+      new Date().getDate(),
     ),
   });
 
