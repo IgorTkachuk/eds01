@@ -24,6 +24,7 @@ import { DeleteRequestButton } from "./delete-request-button";
 import RequestForm from "./forms/request-form";
 import { getUserRequests } from "@/app/request/action";
 import { DateRange } from "react-day-picker";
+import { formatInTimeZone } from "date-fns-tz";
 
 export default async function RequestsTable({
   dateRange,
@@ -55,10 +56,20 @@ export default async function RequestsTable({
           <TableRow key={req.id}>
             <TableCell>{req.performer?.name}</TableCell>
             <TableCell>
-              {format(req.inputdate!, "Pp", { locale: uk })}
+              {/* {format(req.inputdate!, "Pp", { locale: uk })} */}
+              {formatInTimeZone(
+                req.inputdate!,
+                "Europe/Kyiv",
+                "dd.MM.yyyy HH:mm",
+              )}
             </TableCell>
             <TableCell>
-              {format(req.finishdate!, "Pp", { locale: uk })}
+              {/* {format(req.finishdate!, "Pp", { locale: uk })} */}
+              {formatInTimeZone(
+                req.finishdate!,
+                "Europe/Kyiv",
+                "dd.MM.yyyy HH:mm",
+              )}
             </TableCell>
             <TableCell>{req.customerFullName}</TableCell>
             <TableCell>{req.customerPhoneNumber}</TableCell>
