@@ -29,12 +29,14 @@ export default async function RequestsPage(props: {
     from?: string;
     to?: string;
     page?: string;
+    query?: string;
   }>;
 }) {
   const searchParams = await props.searchParams;
   const from = searchParams?.from || undefined;
   const to = searchParams?.to || undefined;
   const page = Number(searchParams?.page) || 1;
+  const query = searchParams?.query || undefined;
 
   let dateRange: DateRange | undefined = undefined;
 
@@ -100,9 +102,9 @@ export default async function RequestsPage(props: {
         </Dialog>
       </div>
       {dateRange ? (
-        <RequestsTable dateRange={dateRange} page={page} />
+        <RequestsTable dateRange={dateRange} page={page} query={query} />
       ) : (
-        <RequestsTable page={page} />
+        <RequestsTable page={page} query={query} />
       )}
 
       <Pagination2 totalPages={totalPages} />

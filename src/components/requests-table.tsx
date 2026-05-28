@@ -29,12 +29,14 @@ import { formatInTimeZone } from "date-fns-tz";
 export default async function RequestsTable({
   dateRange,
   page,
+  query,
 }: {
   dateRange?: DateRange;
   page?: number | undefined;
+  query?: string | undefined;
 }) {
   // const requests = await getRequests(userId);
-  const requests = await getUserRequests(dateRange, page);
+  const requests = await getUserRequests(dateRange, page, query);
   return (
     <Table>
       <TableCaption>Перелік заявок</TableCaption>

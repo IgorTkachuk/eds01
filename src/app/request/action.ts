@@ -4,11 +4,9 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { db } from "@/db/drizzle";
 import { type DateRange } from "react-day-picker";
-import { asc, eq, gte, lte, and, sql } from "drizzle-orm";
-import { request } from "@/db/schema";
+import { asc, eq, gte, lte, and, sql, or, ilike, inArray } from "drizzle-orm";
+import { request, settlement, street, performer } from "@/db/schema";
 import { addMonths, lastDayOfMonth, startOfMonth } from "date-fns";
-import { getUserGroups } from "../actions/account";
-import { number } from "zod";
 
 async function getRequestScope(userId: string) {
   const [{ success: all }, { success: own }] = await Promise.all([
@@ -65,8 +63,30 @@ export async function getUserRequests(
     to: addMonths(startOfMonth(new Date()), 1),
   },
   page?: number,
+  query?: string,
 ) {
   const where = await getRequestCriteria(range);
+
+  const settlements = query
+    ? await db
+        .select({ id: settlement.id })
+        .from(settlement)
+        .where(ilike(settlement.name, `%${query}%`))
+    : [];
+
+  const streets = query
+    ? await db
+        .select({ id: street.id })
+        .from(street)
+        .where(ilike(street.name, `%${query}%`))
+    : [];
+
+  const performers = query
+    ? await db
+        .select({ id: performer.id })
+        .from(performer)
+        .where(ilike(performer.name, `%${query}%`))
+    : [];
 
   return await db.query.request.findMany({
     with: {
@@ -81,7 +101,27 @@ export async function getUserRequests(
       user: true,
       performer: true,
     },
-    where: and(...where),
+    where: and(
+      ...where,
+      query
+        ? or(
+            inArray(
+              request.settlementId,
+              settlements.map((x) => x.id),
+            ),
+            inArray(
+              request.streetId,
+              streets.map((x) => x.id),
+            ),
+            inArray(
+              request.performer,
+              performers.map((x) => x.id),
+            ),
+            ilike(request.customerFullName, `%${query}%`),
+            ilike(request.customerPhoneNumber, `%${query}%`),
+          )
+        : undefined,
+    ),
     orderBy: [asc(request.inputdate)],
     ...(page
       ? {
