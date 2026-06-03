@@ -15,7 +15,7 @@ import { auth } from "@/lib//auth"; // path to your Better Auth server instance
 import { headers } from "next/headers";
 import { signOut } from "@/lib/auth-client";
 import UserPanel from "@/components/user-panel";
-import { getUserGroups } from "../actions/account";
+import { getUserGroups } from "@/app/actions/account";
 import { CalendarRange } from "@/components/forms/data-range";
 import { DateRange } from "react-day-picker";
 import { parseISO, format } from "date-fns";
@@ -53,9 +53,10 @@ export default async function RequestsPage(props: {
   }
 
   const totalPages = await fetchRequestsPages(dateRange);
+  console.log("total pages ~~~~~>: ", totalPages);
 
   return (
-    <div className='flex flex-col gap-4 max-w-fit mx-auto p-4 md:p-24'>
+    <div className='flex flex-col gap-4 max-w-fit p-4 md:p-24'>
       <h1 className='text-2xl font-bold'>Ремонтні заявки</h1>
       <div className='flex gap-2 items-center'>
         <UserPanel />
@@ -106,8 +107,7 @@ export default async function RequestsPage(props: {
       ) : (
         <RequestsTable page={page} query={query} />
       )}
-
-      <Pagination2 totalPages={totalPages} />
+      {totalPages ? <Pagination2 totalPages={totalPages} /> : null}
     </div>
   );
 }

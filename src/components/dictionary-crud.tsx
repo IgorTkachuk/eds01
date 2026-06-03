@@ -106,7 +106,7 @@ export default function DictionaryCrud({ type, label, initialData }: Props) {
   }
 
   return (
-    <div className='flex flex-col gap-4 max-w-fit mx-auto p-4 md:p-24'>
+    <div className='flex flex-col gap-4 max-w-fit p-4 md:p-24'>
       <h1 className='text-2xl font-bold'>{label} (довідник)</h1>
 
       {/* <div>

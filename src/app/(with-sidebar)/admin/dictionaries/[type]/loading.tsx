@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export function DicSkeleton() {
   return (
-    <div className='flex flex-col gap-4 max-w-fit mx-auto p-4 md:p-24'>
+    <div className='flex flex-col gap-4 max-w-fit p-4 md:p-24'>
       <Skeleton className='h-8 w-72' />
       <Skeleton className='h-12 w-full bg-zinc-800/80' />
 

@@ -22,7 +22,7 @@ import { Button } from "./ui/button";
 import { Pencil } from "lucide-react";
 import { DeleteRequestButton } from "./delete-request-button";
 import RequestForm from "./forms/request-form";
-import { getUserRequests } from "@/app/request/action";
+import { getUserRequests } from "@/app/(with-sidebar)/request/action";
 import { DateRange } from "react-day-picker";
 import { formatInTimeZone } from "date-fns-tz";
 
@@ -39,7 +39,7 @@ export default async function RequestsTable({
   const requests = await getUserRequests(dateRange, page, query);
   return (
     <Table>
-      <TableCaption>Перелік заявок</TableCaption>
+      {/* <TableCaption>Перелік заявок</TableCaption> */}
       <TableHeader>
         <TableRow>
           <TableHead className='w-25'>Виконавець</TableHead>
@@ -54,48 +54,59 @@ export default async function RequestsTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {requests.map((req) => (
-          <TableRow key={req.id}>
-            <TableCell>{req.performer?.name}</TableCell>
-            <TableCell>
-              {/* {format(req.inputdate!, "Pp", { locale: uk })} */}
-              {formatInTimeZone(
-                req.inputdate!,
-                "Europe/Kyiv",
-                "dd.MM.yyyy HH:mm",
-              )}
-            </TableCell>
-            <TableCell>
-              {/* {format(req.finishdate!, "Pp", { locale: uk })} */}
-              {formatInTimeZone(
-                req.finishdate!,
-                "Europe/Kyiv",
-                "dd.MM.yyyy HH:mm",
-              )}
-            </TableCell>
-            <TableCell>{req.customerFullName}</TableCell>
-            <TableCell>{req.customerPhoneNumber}</TableCell>
-            <TableCell>{req.settlement?.name}</TableCell>
-            <TableCell>{req.street?.name}</TableCell>
-            <TableCell>{req.buildingNumber}</TableCell>
-            <TableCell className='text-right'>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant='ghost'>
-                    <Pencil className='size-4' />
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className='sm:max-w-fit'>
-                  <DialogHeader>
-                    <DialogTitle>Редагування заявки</DialogTitle>
-                    <RequestForm request={req} />
-                  </DialogHeader>
-                </DialogContent>
-              </Dialog>
-              <DeleteRequestButton requestId={req.id} />
+        {requests.length === 0 ? (
+          <TableRow>
+            <TableCell
+              colSpan={9}
+              className='h-24 text-center text-muted-foreground'
+            >
+              Заявки за вказаний період / за вказаним крітерієм пошуку відстуні
             </TableCell>
           </TableRow>
-        ))}
+        ) : (
+          requests.map((req) => (
+            <TableRow key={req.id}>
+              <TableCell>{req.performer?.name}</TableCell>
+              <TableCell>
+                {/* {format(req.inputdate!, "Pp", { locale: uk })} */}
+                {formatInTimeZone(
+                  req.inputdate!,
+                  "Europe/Kyiv",
+                  "dd.MM.yyyy HH:mm",
+                )}
+              </TableCell>
+              <TableCell>
+                {/* {format(req.finishdate!, "Pp", { locale: uk })} */}
+                {formatInTimeZone(
+                  req.finishdate!,
+                  "Europe/Kyiv",
+                  "dd.MM.yyyy HH:mm",
+                )}
+              </TableCell>
+              <TableCell>{req.customerFullName}</TableCell>
+              <TableCell>{req.customerPhoneNumber}</TableCell>
+              <TableCell>{req.settlement?.name}</TableCell>
+              <TableCell>{req.street?.name}</TableCell>
+              <TableCell>{req.buildingNumber}</TableCell>
+              <TableCell className='text-right'>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant='ghost'>
+                      <Pencil className='size-4' />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className='sm:max-w-fit'>
+                    <DialogHeader>
+                      <DialogTitle>Редагування заявки</DialogTitle>
+                      <RequestForm request={req} />
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
+                <DeleteRequestButton requestId={req.id} />
+              </TableCell>
+            </TableRow>
+          ))
+        )}
       </TableBody>
     </Table>
   );

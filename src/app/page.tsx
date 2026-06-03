@@ -1,28 +1,35 @@
-'use client'
+"use client";
 
+// import RequestsPage from "@/app/(with-sidebar)/request/page";
 import { Loader2 } from "lucide-react";
 import { redirect } from "next/navigation";
 import { useEffect, useRef } from "react";
 
+// import { Loader2 } from "lucide-react";
+// import { redirect } from "next/navigation";
+// import { useEffect, useRef } from "react";
+
+// export default function Home() {
+//   return <RequestsPage />;
+// }
+
 export default function Home() {
-const started = useRef(false);
+  const started = useRef(false);
 
   useEffect(() => {
     if (started.current) return;
     started.current = true;
 
-    redirect("/request")
-
+    redirect("/request");
   }, []);
 
-   return (
-    <div className="flex flex-col items-center gap-3 text-sm text-muted-foreground">
-      <Loader2 className="h-5 w-5 animate-spin" />
-      Перенаправляємо на головну сторінку…
+  return (
+    <div className='flex flex-col items-center gap-3 text-sm text-muted-foreground'>
+      <Loader2 className='h-5 w-5 animate-spin' />
+      Перенаправляємо …
     </div>
   );
 }
-
 
 // import { AsyncStreetSelect } from "@/components/searchStreet";
 // import StreetTable from "@/components/streetTable";
